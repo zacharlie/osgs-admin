@@ -47,9 +47,9 @@ Basically, WSL uses a CIFS mount, which doesn't trigger the necessary events in 
 
 > Just a note that I first identified it (after many hours of frustration) [from a stack overflow post](https://stackoverflow.com/questions/50010421/watchdog-observer-not-running-in-container) which pointed me to a [workaround script](http://blog.subjectify.us/miscellaneous/2017/04/24/docker-for-windows-watch-bindings.html), but alas, that doesn't work for WSL2. But kudos to the internet community members who pointed me in the right direction anyway.
 
-There are a few solutions to this, the simplest being **storing and mounting the local volume inside the WSL subsystem** (i.e your repo is in 'ubuntu' `~/hot-flask/` and not `/mnt/x/hot-flask` and you're running docker from WSL directly). Considering that WSL stores the VM disk in AppData (and moving it is non-trivial), this is hardly the ideal situation in a world of network shares, collaboration, and high-speed-lower-capacity primary disks. ALso, seeing as this project is specifically designed to resolve issues like that, seems like some effort should go into addressing this.
+There are a few solutions to this, the simplest being **storing and mounting the local volume inside the WSL subsystem** (i.e your repo is in 'ubuntu' `~/hot-flask/` and not `/mnt/x/hot-flask` and you're running docker from WSL directly). Considering that WSL stores the VM disk in AppData (and moving it is non-trivial), this is hardly the ideal situation in a world of network shares, collaboration, and high-speed-lower-capacity primary disks. Also, seeing as this project is specifically designed to resolve issues like that, seems like some effort should go into addressing this. For anybody who finds this feasible but wants to access their project with a more native windows experience, you can simply access your project from `\\wsl$\Ubuntu\home\username\dev\hot-flask` or similar using explorer and vscode.
 
-Which brings us to solution two - using filesystem polling. Again, less than ideal, but nonetheless effective considering the project is designed primarily for dev work.
+This brings us to solution two - using filesystem polling. Again, less than ideal, but nonetheless effective considering the project is designed primarily for dev work.
 
 The `watcher-poll.py` has a reconfigured version of the watchdog script which uses a PollingObserver. For ease of configuration, there is a preconfigured `dockerfile-watchdog-poll` build, which is also configured in `docker-compose-poll.yml`, so it should be pretty simple to switch to the relevant setup. Probably makes the repo structure a bit more confusing, but seems more reasonable than another environment variable or something.
 
@@ -58,6 +58,10 @@ Basically, if you're using Docker on Windows, run `docker-compose -f docker-comp
 ### uWSGI Callable Weirdness
 
 The initial project structure was just `./app/app.py`, but for some reason as soon there were attempts to use more complex project structures, the flask application started malfunctioning. Apparently there was some sort of naming conflict which was described in a [Stack Overflow Post](https://stackoverflow.com/questions/56774122/uwsgi-nginx-flask-unable-to-load-app-0-mountpoint-callable-not-found-or-i/69097480#69097480), so the current structure, although maybe a bit more convoluted than the standard flask hello world, at least seems to be fairly robust (and easily extensible).
+
+## Autorefresh
+
+You could set up quart instead of flask for async/ ws, use long polling, or configure any other system you like for more effective client side refreshing of the browser. But that's out of scope for what this intends on achieving and you'll have to implement it yourself
 
 ## Debugging
 
