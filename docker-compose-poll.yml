@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  flask:
+    image: webapp-flask
+    build:
+      args:
+        TARGET: "${HOT_FLASK_APP_TARGET}"
+        SOURCE: "${HOT_FLASK_APP_SOURCE}"
+      context: .
+      dockerfile: dockerfile-flask
+    restart: always
+    volumes:
+      - "${HOT_FLASK_APP_SOURCE}:${HOT_FLASK_APP_TARGET}"
+
+  watchdog:
+    image: webapp-watchdog
+    build:
+      args:
+        TARGET: "${HOT_FLASK_APP_TARGET}"
+      context: .
+      dockerfile: dockerfile-watchdog-poll
+    restart: always
+    volumes:
+      - "${HOT_FLASK_APP_SOURCE}:${HOT_FLASK_APP_TARGET}"
+
+  nginx:
+    image: webapp-nginx
+    build:
+      context: .
+      dockerfile: dockerfile-nginx
+    ports:
+      - 5000:80
+    depends_on:
+      - flask
+    restart: always
