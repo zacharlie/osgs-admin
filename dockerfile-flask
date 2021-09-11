@@ -1,0 +1,17 @@
+FROM python:3.8
+
+ARG TARGET
+ARG SOURCE
+
+RUN mkdir "$TARGET"
+WORKDIR "$TARGET"
+
+EXPOSE 5000
+
+COPY "$SOURCE" .
+
+COPY requirements.txt .
+
+RUN pip install -r requirements.txt
+
+CMD [ "uwsgi", "--ini", "uwsgi.ini" ]
