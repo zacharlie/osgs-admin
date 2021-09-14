@@ -1,3 +1,6 @@
+# Exclude site database, backups, journals, and auxillary content
+*.sqlite*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

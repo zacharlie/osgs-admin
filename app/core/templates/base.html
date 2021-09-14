@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+{% block head %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% block css %}
+    <!-- CSS Framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <!-- <link rel="stylesheet" href="/static/css/bulma/0.9.2/bulma.min.css"> -->
+    <!-- Style -->
+    <link rel="stylesheet" href="/static/css/main.css">
+    {% endblock %}
+    {% block styles %}
+    <style>
+        body {
+            min-height: calc(100vh+3rem);
+        }
+
+        .main-block {
+            margin-top: -1.5rem;
+        }
+
+        .osgs-footer {
+            position: fixed;
+            height: 3rem;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #f8f8f8;
+        }
+    </style>
+    {% endblock %}
+
+    {% block javascript %}
+    <!-- JS -->
+    <script type="application/javascript" src="/static/js/main.js"></script>
+    {% endblock %}
+
+    {% block favico %}
+    <!-- FAVICO -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/static/favico/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/static/favico/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/static/favico/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/favico/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/static/favico/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/static/favico/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/static/favico/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/favico/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/favico/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/favico/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/static/favico/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favico/favicon-16x16.png">
+    <link rel="manifest" href="/static/favico/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/static/favico/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    {% endblock %}
+
+    {% block title %}
+    <!-- Title -->
+    <title>{{ g.site_title }}</title>
+    {% endblock %}
+
+    {% block scripts %}
+    {% endblock %}
+
+</head>
+{% endblock %}
+
+<body class="has-navbar-fixed-top">
+
+    {% block nav %}
+    <!-- nav -->
+    <nav id="navbar" class="navbar is-fixed-top has-shadow is-info">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="/" class="navbar-item">
+                    <figure class="image is-24x24 mr-2">
+                        <img src="{{ g.site_logo }}">
+                    </figure>
+                    {{ g.site_title }}
+                </a>
+                <span class="navbar-burger burger" data-target="navbarMenu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
+            <div id="navbarMenu" class="navbar-menu">
+                <div class="navbar-end">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('main.page_dashboard') }}" class="navbar-item">
+                        Dashboard
+                    </a>
+                    {% endif %}
+                    {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.page_login') }}" class="navbar-item">
+                        Login
+                    </a>
+                    {% endif %}
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.page_newuser') }}" class="navbar-item">
+                        Create User
+                    </a>
+                    <a href="{{ url_for('auth.page_logout') }}" class="navbar-item">
+                        Logout
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endblock %}
+
+    {% block main %}
+    <section class="hero is-info is-fullheight-with-navbar main-block">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </section>
+    {% endblock %}
+
+    {% block footer %}
+    <!-- footer -->
+    <div class="osgs-footer p-2">
+        <div class="content has-text-centered">
+            <p>
+                Built by <a href="https://www.kartoza.com/"><strong>Kartoza</strong></a>
+            </p>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+
+
+</html>
