@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "_main.html" %}
 
 {% block content %}
 <div class="column is-8 is-offset-2">
@@ -29,15 +29,16 @@
                 </div>
             </div>
 
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="notification is-info">
+                {{ messages[0] }}.
+            </div>
+            {% endif %}
+            {% endwith %}
+
             <button class="button is-block is-info is-medium is-fullwidth">Create</button>
         </form>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="notification is-info">
-            {{ messages[0] }}.
-        </div>
-        {% endif %}
-        {% endwith %}
     </div>
 </div>
 {% endblock %}

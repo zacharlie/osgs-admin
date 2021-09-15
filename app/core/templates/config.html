@@ -1,10 +1,98 @@
-{% extends "base.html" %}
-
+{% extends "_main.html" %}
 
 {% block content %}
 <div class="column is-8 is-offset-2">
-    <h3 class="title">{{ osgs.name }}</h3>
+    <h3 class="title">System Configuration</h3>
     <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="notification is-info">
+            {{ messages[0] }}.
+        </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/config">
+
+            <div class="field">
+                <div class="field-label has-text-left">
+                    <label class="label">System Name</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input class="input" type="text" name="name"
+                                value="{{ osgs.name }}">
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="field-label has-text-left">
+                    <label class="label">Stack Root</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input class="input type="text" name="stackroot"
+                                value="{{ osgs.stackroot }}">
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="field-label has-text-left">
+                    <label class="label">Target Repository</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input class="input" type="text" name="targetrepo"
+                                value="{{ targetrepo }}">
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="field-label is-large has-text-centered">
+                    <label class="label">Services</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+            <div class="colums">
+                <div class="column">
+                    <li class="checkbox">
+                        <input type="checkbox">
+                        checkbox
+                    </li>
+                    <li class="checkbox">
+                        <input type="checkbox">
+                        checkbox
+                    </li>
+                </div>
+                <div class="column">
+                    <li class="checkbox">
+                        <input type="checkbox">
+                        checkbox
+                    </li>
+                    <li class="checkbox">
+                        <input type="checkbox">
+                        checkbox
+                    </li>
+                </div>
+            </div>
+
+        </p>
+    </div>
+</div>
+</div>
+
+            <button class="button is-block is-info is-medium is-fullwidth">Update</button>
+
+        </form>
     </div>
 </div>
 {% endblock %}

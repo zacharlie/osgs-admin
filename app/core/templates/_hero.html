@@ -1,0 +1,20 @@
+{% extends "_base.html" %}
+
+{% block mainstyles %}
+<style>
+    .main-block {
+        margin-top: -1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<section class="hero is-info is-fullheight-with-navbar main-block">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</section>
+{% endblock %}

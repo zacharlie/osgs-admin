@@ -79,6 +79,12 @@ def page_bootstrap():
     return bootstrap
 
 
+## To Do: on app initialization, check that the git repo
+## is properly configured, in sync/ matching the remote,
+## and whether it has updates available
+##
+
+
 # Context processors
 
 

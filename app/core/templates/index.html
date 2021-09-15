@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "_hero.html" %}
 
 {% block content %}
 <h1 class="title">
@@ -7,5 +7,12 @@
 <h2 class="subtitle">
   Management Console for the Open Source GIS Stack.
 </h2>
-<a href="/login"><img src="{{ g.site_logo }}" alt="site logo" width="400px" height="400px" /></a>
+{% if current_user.is_authenticated %}
+<a href="/dashboard">
+{% endif %}
+{% if not current_user.is_authenticated %}
+<a href="/login">
+{% endif %}
+  <img src="{{ g.site_logo }}" alt="site logo" width="400px" height="400px" />
+</a>
 {% endblock %}

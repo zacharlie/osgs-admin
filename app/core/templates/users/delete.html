@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "_main.html" %}
 
 {% block content %}
 <div class="column is-8 is-offset-2">
@@ -6,44 +6,54 @@
     <div class="box">
         {% if user %}
         <form method="POST" action="/users/delete/{{ user.id }}">
+            <div class="columns">
 
-            <div class="field">
-                <label class="label">User Name</label>
-                <div class="control">
-                    <input class="input is-small is-static has-text-centered"
-                    type="username" name="username" value="{{ user.username }}"
-                        readonly>
+                <div class="column">
+
+                    <div class="field">
+                        <label class="label">User Name</label>
+                        <div class="control">
+                            <input class="input is-small is-static has-text-centered"
+                            type="username" name="username" value="{{ user.username }}"
+                                readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="field">
+                        <label class="label">First Name</label>
+                        <div class="control">
+                            <input class="input is-small is-static has-text-centered"
+                            type="firstname" name="firstname" value="{{ user.firstname }}"
+                            readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Last Name</label>
+                        <div class="control">
+                            <input class="input is-small is-static has-text-centered"
+                            type="lastname" name="lastname" value="{{ user.lastname }}"
+                            readonly>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="field">
-                <label class="label">First Name</label>
-                <div class="control">
-                    <input class="input is-small is-static has-text-centered"
-                    type="firstname" name="firstname" value="{{ user.firstname }}"
-                        readonly>
-                </div>
+            {% endif %}
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="notification is-info">
+                {{ messages[0] }}.
             </div>
-
-            <div class="field">
-                <label class="label">Last Name</label>
-                <div class="control">
-                    <input class="input is-small is-static has-text-centered"
-                    type="lastname" name="lastname" value="{{ user.lastname }}"
-                        readonly>
-                </div>
-            </div>
+            {% endif %}
+            {% endwith %}
 
             <button class="button is-block is-danger is-medium is-fullwidth">Confirm deletion</button>
         </form>
-        {% endif %}
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="notification is-info">
-            {{ messages[0] }}.
-        </div>
-        {% endif %}
-        {% endwith %}
     </div>
 </div>
 {% endblock %}

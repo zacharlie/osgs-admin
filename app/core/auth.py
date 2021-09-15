@@ -40,8 +40,8 @@ def form_login_post():
 @auth.route("/users")
 @login_required
 def page_users():
-    userlist = User.query.all()
-    sort = request.args.get("sort")
+
+    sort = request.args.get("sort", "id", type=str)
     sort = sort if sort in ["id", "name", "user", "first", "last"] else "id"
     sortmap = {
         "id": "id",
@@ -51,7 +51,23 @@ def page_users():
         "last": "lastname",
     }
     sort = sortmap[sort]
-    return render_template("users.html", userlist=userlist, attr=sort)
+
+    order = request.args.get("order", "asc", type=str)
+    order = order if order in ["asc", "desc"] else "asc"
+
+    page = request.args.get("page", 1, type=int)
+
+    if order == "desc":
+        query = User.query.order_by(getattr(User, sort).desc())
+    else:
+        query = User.query.order_by(getattr(User, sort).asc())
+
+    USERS_PER_PAGE = 10
+    userlist = query.paginate(page, USERS_PER_PAGE, True)
+
+    return render_template(
+        "users.html", userlist=userlist, sort=sort, order=order, page=page
+    )
 
 
 @auth.route("/users/create")
@@ -90,6 +106,8 @@ def form_user_create_post():
     # add the new user to the database
     db.session.add(new_user)
     db.session.commit()
+
+    flash(f"User {username} created")
 
     return redirect(url_for("auth.page_users"))
 

@@ -4,13 +4,15 @@ from flask_login import UserMixin
 import os
 from datetime import datetime
 
-import logging
-
 # from flask_sqlalchemy import func
 
 from flask import render_template, flash, redirect, url_for
 from werkzeug.security import generate_password_hash
 from base64 import b64encode
+
+import json
+
+import logging
 
 _LOG = logging.getLogger(__name__)
 
@@ -51,16 +53,35 @@ class Osgs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True)
     created = db.Column(db.DateTime, default=datetime.utcnow)
+    stackroot = db.Column(db.String(255))
+    # Store generic config as json object to allow dynamic values as
+    # needed, whilst keeping data consolidated in the sqlite db for
+    # simplifying migration and deployment.
+    config = db.Column(db.JSON())
 
     def __init__(self, **kwargs):
         db.create_all()
         self.id = kwargs.get("id")
         self.name = kwargs.get("name")
         self.created = kwargs.get("created")
+        self.stackroot = kwargs.get("stackroot")
+        self.config = kwargs.get("config")
         db.session.commit()
 
 
 def set_config_defaults():
-    config_defaults = Osgs(name="Open Source GIS Stack")
+
+    config_dict = {
+        "targetrepo": "git@github.com:kartoza/osgs",
+        "git_configured": "False",
+        "git_init_dt": datetime.utcnow().isoformat(),
+        "git_pull_dt": datetime.utcnow().isoformat(),
+    }
+
+    config_defaults = Osgs(
+        name="Open Source GIS Stack",
+        stackroot=os.path.join(os.path.realpath(os.path.dirname(__file__)), "osgs"),
+        config=json.dumps(config_dict),
+    )
     db.session.add(config_defaults)
     db.session.commit()

@@ -26,7 +26,12 @@ def page_config():
 
     osgs = Osgs.query.all()[0]
 
+    import json
+
+    targetrepo = json.loads(osgs.config)["targetrepo"]
+
     return render_template(
         "config.html",
         osgs=osgs,
+        targetrepo=targetrepo,
     )

@@ -1,0 +1,32 @@
+{% extends "_base.html" %}
+
+{% block mainstyles %}
+<style>
+    .main-block {
+        margin-top: -3rem;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+    }
+    .content-block{
+        max-height: 80vh;
+        overflow: auto;
+    }
+</style>
+
+{% block styles %}
+{% endblock %}
+
+{% endblock %}
+
+
+{% block main %}
+
+<section class="section main-block">
+    <div class="container content-block is-fullwidth has-text-centered">
+        {% block content %}
+        {% endblock %}
+    </div>
+</section>
+
+{% endblock %}

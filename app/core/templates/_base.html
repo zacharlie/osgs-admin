@@ -20,11 +20,8 @@
 
     <style>
         body {
+            // make sure the footer doesn't obscure content
             min-height: calc(100vh+3rem);
-        }
-
-        .main-block {
-            margin-top: -1.5rem;
         }
 
         .osgs-footer {
@@ -42,7 +39,7 @@
     </style>
     {% endblock %}
 
-    {% block styles %}
+    {% block mainstyles %}
     {% endblock %}
 
     {% block javascript %}
@@ -153,14 +150,8 @@
     {% endblock %}
 
     {% block main %}
-    <section class="hero is-info is-fullheight-with-navbar main-block">
-        <div class="hero-body">
-            <div class="container has-text-centered">
-                {% block content %}
-                {% endblock %}
-            </div>
-        </div>
-    </section>
+        {% block content %}
+        {% endblock %}
     {% endblock %}
 
     {% block footer %}
