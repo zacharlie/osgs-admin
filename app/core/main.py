@@ -1,7 +1,13 @@
+# Main functions
+
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 
 main = Blueprint("main", __name__)
+
+import logging
+
+_LOG = logging.getLogger(__name__)
 
 
 @main.route("/")
@@ -28,10 +34,10 @@ def page_config():
 
     import json
 
-    targetrepo = json.loads(osgs.config)["targetrepo"]
+    osgs_repo = json.loads(osgs.config)["osgs_repo"]
 
     return render_template(
         "config.html",
         osgs=osgs,
-        targetrepo=targetrepo,
+        osgs_repo=osgs_repo,
     )

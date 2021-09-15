@@ -20,7 +20,7 @@
 
     <style>
         body {
-            // make sure the footer doesn't obscure content
+            /* make sure the footer doesn't obscure content */
             min-height: calc(100vh+3rem);
         }
 
@@ -104,7 +104,7 @@
                     <a href="{{ url_for('main.page_dashboard') }}" class="navbar-item">
                         <button class="button is-info is-small">
                             <span class="icon">
-                                <i class="material-icons">dashboard</i>
+                                <i class="material-icons" title="Dashboard">dashboard</i>
                             </span>
                         </button>
                     </a>
@@ -113,7 +113,7 @@
                     <a href="{{ url_for('main.page_config') }}" class="navbar-item">
                         <button class="button is-info is-small">
                             <span class="icon">
-                                <i class="material-icons">settings</i>
+                                <i class="material-icons" title="Settings">settings</i>
                             </span>
                         </button>
                     </a>
@@ -122,7 +122,7 @@
                     <a href="{{ url_for('auth.page_login') }}" class="navbar-item">
                         <button class="button is-info is-small">
                             <span class="icon">
-                                <i class="material-icons">login</i>
+                                <i class="material-icons" title="Login">login</i>
                             </span>
                         </button>
                     </a>
@@ -131,14 +131,14 @@
                     <a href="{{ url_for('auth.page_users') }}" class="navbar-item">
                         <button class="button is-info is-small">
                             <span class="icon">
-                                <i class="material-icons">people</i>
+                                <i class="material-icons" title="Users">people</i>
                             </span>
                         </button>
                     </a>
                     <a href="{{ url_for('auth.page_logout') }}" class="navbar-item">
                         <button class="button is-info is-small">
                             <span class="icon">
-                                <i class="material-icons">logout</i>
+                                <i class="material-icons" title="Logout">logout</i>
                             </span>
                         </button>
                     </a>

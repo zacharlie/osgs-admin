@@ -1,24 +1,22 @@
-# Operations
+# Operations functions
 
-import os
+from flask import Blueprint, render_template
+from flask_login import login_required
+
+ops = Blueprint("ops", __name__)
+
+import logging
+
+_LOG = logging.getLogger(__name__)
+
 from .models import Osgs
 
-import subprocess
-
-osgs = Osgs.query.all()[0]
+from .utils import hello_world
 
 
-def clone_stackroot(osgs):
-    subprocess.run(
-        ["git", "clone", osgs.config["targetrepo"], osgs.stackroot],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
-    ).stdout
-
-
-def run_make(osgs):
-    return subprocess.run(
-        ["make", "-s", "-C", osgs.stackroot],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
-    ).stdout
+@ops.route("/ops/clone")
+@login_required
+def page_index():
+    osgs = Osgs.query.all()[0]
+    hw = hello_world()
+    return render_template("ops/clone.html", osgs=osgs, hw=hw)

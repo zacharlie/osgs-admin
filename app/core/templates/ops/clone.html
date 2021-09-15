@@ -11,6 +11,9 @@
         </div>
         {% endif %}
         {% endwith %}
+        <p>
+            {{hw}}
+        </p>
         <form method="POST" action="/config">
 
             <div class="field">
@@ -29,7 +32,7 @@
 
             <div class="field">
                 <div class="field-label has-text-left">
-                    <label class="label">Root</label>
+                    <label class="label">Stack Root</label>
                 </div>
                 <div class="field-body">
                     <div class="field">
@@ -62,8 +65,12 @@
                 <div class="field-body">
                     <div class="field">
                         <p class="control">
-            <div class="columns">
+            <div class="colums">
                 <div class="column">
+                    <li class="checkbox">
+                        <input type="checkbox">
+                        checkbox
+                    </li>
                     <li class="checkbox">
                         <input type="checkbox">
                         checkbox
@@ -74,14 +81,6 @@
                         <input type="checkbox">
                         checkbox
                     </li>
-                </div>
-                <div class="column">
-                    <li class="checkbox">
-                        <input type="checkbox">
-                        checkbox
-                    </li>
-                </div>
-                <div class="column">
                     <li class="checkbox">
                         <input type="checkbox">
                         checkbox
