@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-8 is-offset-2">
+    <h3 class="title">Edit User</h3>
+    <div class="box">
+        <form method="POST" action="/users/edit/{{ user.id }}">
+            <div class="field is-horizontal">
+                <div class="field-label is-large">
+                    <label class="label">User</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input class="input is-large" type="username" name="username"
+                                value="{% if user %}{{ user.username }}{% endif %}{% if not user %}No Data{% endif %}"
+                                {% if not user %}disabled{% endif %}
+                                readonly>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-large">
+                    <label class="label">First</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input class="input is-large" type="text" name="firstname"
+                                value="{% if user %}{{ user.firstname }}{% endif %}{% if not user %}No Data{% endif %}"
+                                {% if not user %}disabled{% endif %}>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-large">
+                    <label class="label">Last</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input class="input is-large" type="text" name="lastname"
+                                value="{% if user %}{{ user.lastname }}{% endif %}{% if not user %}No Data{% endif %}"
+                                {% if not user %}disabled{% endif %}>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <a class="button mb-4 is-block is-warning is-medium is-fullwidth"
+            href="/users/reset/{{ user.id }}">Reset Password</a>
+
+            <button class="button is-block is-info is-medium is-fullwidth">Update</button>
+
+        </form>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="notification is-info">
+            {{ messages[0] }}.
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</div>
+{% endblock %}

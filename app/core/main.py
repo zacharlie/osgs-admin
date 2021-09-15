@@ -17,3 +17,16 @@ def page_dashboard():
         firstname=current_user.firstname,
         lastname=current_user.lastname,
     )
+
+
+@main.route("/config")
+@login_required
+def page_config():
+    from .models import Osgs
+
+    osgs = Osgs.query.all()[0]
+
+    return render_template(
+        "config.html",
+        osgs=osgs,
+    )

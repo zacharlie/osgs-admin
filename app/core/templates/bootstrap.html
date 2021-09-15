@@ -6,15 +6,24 @@
     <h3 class="title">Database Created</h3>
     <div class="box">
         <form action="/login">
+            <div class="label is-large">
+                Admin Credentials
+            </div>
             <div class="label">
-                Admin Credential
+                Username
             </div>
             <div class="field">
-                <pre class="has-text-centered">admin / admin</pre>
+                <pre class="has-text-centered">admin</pre>
             </div>
-            <div class="notification is-warning">
+            <div class="label">
+                Password
+            </div>
+            <div class="field">
+                <pre class="has-text-centered">{{ credential }}</pre>
+            </div>
+            <!-- <div class="notification is-danger">
                 CHANGE YOUR LOGIN IMMEDIATELY
-            </div>
+            </div> -->
             <button class="button is-block is-info is-large is-fullwidth">Login</button>
         </form>
     </div>

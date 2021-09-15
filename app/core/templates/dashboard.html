@@ -2,6 +2,6 @@
 
 {% block content %}
 <h1 class="title">
-  Welcome, {{ firstname }}{% if lastname %} {{ lastname }}{% endif %}!
+  Welcome{% if firstname %}, {{ firstname }}{% endif %}{% if lastname %} {{ lastname }}{% endif %}!
 </h1>
 {% endblock %}

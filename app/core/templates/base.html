@@ -13,8 +13,11 @@
     <!-- <link rel="stylesheet" href="/static/css/bulma/0.9.2/bulma.min.css"> -->
     <!-- Style -->
     <link rel="stylesheet" href="/static/css/main.css">
-    {% endblock %}
-    {% block styles %}
+
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+
     <style>
         body {
             min-height: calc(100vh+3rem);
@@ -32,7 +35,14 @@
             width: 100%;
             background-color: #f8f8f8;
         }
+
+        .hero .box {
+            text-shadow: none;
+        }
     </style>
+    {% endblock %}
+
+    {% block styles %}
     {% endblock %}
 
     {% block javascript %}
@@ -95,20 +105,45 @@
                 <div class="navbar-end">
                     {% if current_user.is_authenticated %}
                     <a href="{{ url_for('main.page_dashboard') }}" class="navbar-item">
-                        Dashboard
+                        <button class="button is-info is-small">
+                            <span class="icon">
+                                <i class="material-icons">dashboard</i>
+                            </span>
+                        </button>
+                    </a>
+                    {% endif %}
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('main.page_config') }}" class="navbar-item">
+                        <button class="button is-info is-small">
+                            <span class="icon">
+                                <i class="material-icons">settings</i>
+                            </span>
+                        </button>
                     </a>
                     {% endif %}
                     {% if not current_user.is_authenticated %}
                     <a href="{{ url_for('auth.page_login') }}" class="navbar-item">
-                        Login
+                        <button class="button is-info is-small">
+                            <span class="icon">
+                                <i class="material-icons">login</i>
+                            </span>
+                        </button>
                     </a>
                     {% endif %}
                     {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('auth.page_newuser') }}" class="navbar-item">
-                        Create User
+                    <a href="{{ url_for('auth.page_users') }}" class="navbar-item">
+                        <button class="button is-info is-small">
+                            <span class="icon">
+                                <i class="material-icons">people</i>
+                            </span>
+                        </button>
                     </a>
                     <a href="{{ url_for('auth.page_logout') }}" class="navbar-item">
-                        Logout
+                        <button class="button is-info is-small">
+                            <span class="icon">
+                                <i class="material-icons">logout</i>
+                            </span>
+                        </button>
                     </a>
                     {% endif %}
                 </div>
@@ -133,7 +168,8 @@
     <div class="osgs-footer p-2">
         <div class="content has-text-centered">
             <p>
-                Built by <a href="https://www.kartoza.com/"><strong>Kartoza</strong></a>
+                <a href="https://github.com/kartoza/osgs"><strong>OSGS</strong></a> is built by
+                <a href="https://www.kartoza.com/"><strong>Kartoza</strong></a>
             </p>
         </div>
     </div>

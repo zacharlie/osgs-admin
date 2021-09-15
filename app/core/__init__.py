@@ -15,6 +15,9 @@ def initialize():
     app = Flask(__name__)
 
     # app.config["SECRET_KEY"] = "fzHofj7khjMslfoTVU5OONxqkcmCYPxBE5BygBaW9zyqT"
+    # generate randomised secret key for session signing. It may break active sessions
+    # on reinstantiation of the app, and may be served better by a k8s secret or something
+    # but at this point in time it seems reasonable to use a random key for user deploys
     app.config["SECRET_KEY"] = b64encode(os.urandom(43)).decode("utf-8")[4:37]
     app.config["DATABASE_FILE"] = "db.sqlite"
     # db path uses sqlite:/// for relative and sqlite://// for absolute
@@ -60,10 +63,11 @@ def check_db(database_path):
     return db_exists
 
 
-# This is just for frontend and should be disabled to force a 405 when requested without posting
-@app.route("/bootstrap", methods=["GET"])
-def page_bootstrap_dev():
-    return render_template("bootstrap.html")
+# This is just for frontend and should be disabled to force a 405
+# when requested without calling the boostrapping operation
+# @app.route("/bootstrap", methods=["GET"])
+# def page_bootstrap_dev():
+#     return render_template("bootstrap.html")
 
 
 # Bootstap process for initiating new database
@@ -71,8 +75,8 @@ def page_bootstrap_dev():
 def page_bootstrap():
     from .models import init_db as initialize_database
 
-    initialize_database(app.database_path)
-    return render_template("bootstrap.html")
+    bootstrap = initialize_database(app.database_path)
+    return bootstrap
 
 
 # Context processors
@@ -100,8 +104,27 @@ def get_site_logo():
 
 # Error codes
 
-for i in [404, 405]:
+for errorcode in [
+    item
+    for elem in [
+        [400, 401],
+        range(403, 406 + 1, 1),
+        range(408, 418 + 1, 1),
+        [422, 423, 424, 428, 429, 431, 451],
+        range(500, 505, 1),
+    ]
+    for item in elem
+]:
+    # https://werkzeug-doc.readthedocs.io/en/latest/exceptions.html
 
-    @app.errorhandler(i)
+    @app.errorhandler(errorcode)
     def error(error):
-        return render_template("error.html", error=error, errorcode=i), i
+        return (
+            render_template(
+                "error.html",
+                error_code=error.code,
+                error_description=error.description,
+                error_name=error.name,
+            ),
+            errorcode,
+        )

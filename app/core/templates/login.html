@@ -6,7 +6,7 @@
     <div class="box">
         {% if not check_database_state() %}
         <form method="POST" action="/bootstrap">
-            <div class="label">Database does not exist</div>
+            <div class="label is-large">Database does not exist</div>
             <button class="button is-block is-success is-large is-fullwidth">Generate</button>
         </form>
         {% endif %}

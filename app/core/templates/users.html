@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="column is-10 is-offset-1">
+    <h3 class="title">Users</h3>
+    <div class="box">
+        <table class="table is-fullwidth has-text-centered">
+            <thead>
+                <tr>
+                    <th>
+                        <a href="/users?sort=id">
+                            <abbr title="User ID">ID</abbr>
+                            <i class="material-icons is-small is-size-7">import_export</i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="/users?sort=user">
+                            <abbr title="Username">User</abbr>
+                            <i class="material-icons is-small is-size-7">import_export</i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="/users?sort=first">
+                            <abbr title="First Name">First</abbr>
+                            <i class="material-icons is-small is-size-7">import_export</i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="/users?sort=last">
+                            <abbr title="Last Name">Last</abbr>
+                            <i class="material-icons is-small is-size-7">import_export</i>
+                        </a>
+                    </th>
+                    <th><abbr title="User Actions"></abbr></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in userlist|sort(attribute=attr) %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.firstname }}</td>
+                    <td>{{ user.lastname }}</td>
+                    <td>
+                        <span>
+                            <a href="/users/delete/{{ user.id }}">
+                                <button class="button is-danger is-small">
+                                    <span class="icon">
+                                        <i class="material-icons">delete</i>
+                                    </span>
+                                </button>
+                            </a>
+                            <a href="/users/edit/{{ user.id }}">
+                                <button class="button is-info is-small">
+                                    <span class="icon">
+                                        <i class="material-icons">edit</i>
+                                    </span>
+                                </button>
+                            </a>
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="notification is-info">
+            {{ messages[0] }}.
+        </div>
+        {% endif %}
+        {% endwith %}
+        <form action="/users/create">
+            <button class="button is-block is-success is-medium is-fullwidth">Create User</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

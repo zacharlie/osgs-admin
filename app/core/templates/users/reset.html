@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-8 is-offset-2">
+    <h3 class="title">Password Reset</h3>
+    <div class="box">
+        <form method="POST" action="/users/reset/{{ user.id }}">
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Password</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input class="input is-large" type="password" name="password" placeholder="Password">
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label">Repeat</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input class="input is-large" type="password" name="repeated" placeholder="Repeat Password">
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="m-6">Validation not set up yet but it needs to be</p>
+
+            <button class="button is-block is-warning is-medium is-fullwidth">Reset Password</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="notification is-info">
+            {{ messages[0] }}.
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</div>
+{% endblock %}
