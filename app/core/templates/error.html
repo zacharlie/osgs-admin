@@ -8,9 +8,14 @@
     <h2 class="subtitle">
         {{ error_name }}
     </h2>
+    <img src="{{ g.site_logo }}" style="-webkit-filter: grayscale(100%); filter: grayscale(100%);"
+    alt="site logo" width="200px" height="200px" />
     <p>
         {{error_description}}
     </p>
+    <a href="/">
+        <button class="button mt-4 is-fullwidth is-outline">Home</button>
+    </a>
 </div>
 
 {% endblock %}
