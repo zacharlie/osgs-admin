@@ -1,3 +1,7 @@
+# explicit ignore files and directories
+*.ignore
+.ignore/*
+
 # Exclude site database, backups, journals, and auxillary content
 *.sqlite*
 

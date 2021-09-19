@@ -1,16 +1,10 @@
-# Authentication and user functions
-
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from .models import User
 from . import db
 
 auth = Blueprint("auth", __name__)
-
-import logging
-
-_LOG = logging.getLogger(__name__)
 
 
 @auth.route("/login")
@@ -36,7 +30,35 @@ def form_login_post():
 
     # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=remember)
-    return redirect(url_for("main.page_dashboard"))
+    return redirect(url_for("auth.page_dashboard"))
+
+
+@auth.route("/dashboard")
+@login_required
+def page_dashboard():
+    return render_template(
+        "dashboard.html",
+        firstname=current_user.firstname,
+        lastname=current_user.lastname,
+    )
+
+
+@auth.route("/config")
+@login_required
+def page_config():
+    from .models import Osgs
+
+    osgs = Osgs.query.all()[0]
+
+    import json
+
+    osgs_repo = json.loads(osgs.config)["osgs_repo"]
+
+    return render_template(
+        "config.html",
+        osgs=osgs,
+        osgs_repo=osgs_repo,
+    )
 
 
 @auth.route("/users")
@@ -68,7 +90,7 @@ def page_users():
     userlist = query.paginate(page, USERS_PER_PAGE, True)
 
     return render_template(
-        "users.html", userlist=userlist, sort=sort, order=order, page=page
+        "users/index.html", userlist=userlist, sort=sort, order=order, page=page
     )
 
 

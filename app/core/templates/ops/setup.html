@@ -1,0 +1,16 @@
+{% extends "_main.html" %}
+
+{% block content %}
+Ain't nuthin ta see here
+
+<form method="POST" action="/task/example">
+    <div class="label is-large">example task creation</div>
+    <button class="button is-block is-success is-large is-fullwidth">Initiate</button>
+</form>
+
+<br>
+<br>
+
+{{ result }}
+
+{% endblock %}

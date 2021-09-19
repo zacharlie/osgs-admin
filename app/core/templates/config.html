@@ -4,6 +4,9 @@
 <div class="column is-8 is-offset-2">
     <h3 class="title">System Configuration</h3>
     <div class="box">
+        <p>{{request_active}}</p>
+        <p>{{g.request_active}}</p>
+        <a href="/ops/clone">Go To Clone</a>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <div class="notification is-info">

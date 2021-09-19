@@ -1,4 +1,5 @@
 from . import db
+from flask import current_app
 from flask_login import UserMixin
 
 import os
@@ -8,13 +9,8 @@ from datetime import datetime
 
 from flask import render_template, flash, redirect, url_for
 from werkzeug.security import generate_password_hash
-from base64 import b64encode
 
 import json
-
-import logging
-
-_LOG = logging.getLogger(__name__)
 
 
 class User(UserMixin, db.Model):
@@ -27,11 +23,15 @@ class User(UserMixin, db.Model):
 
 
 def init_db(database_path):
-    _LOG.warning("Attempting to reinitialize database")
+    current_app.logger.warning("Attempting to reinitialize database")
 
     if not os.path.exists(database_path):  # ensure existing db cannot be overwritten
-        # credential = b64encode(os.urandom(43)).decode("utf-8")[4:37]  # set random (production mode)
-        credential = "admin"  # admin admin (development mode)
+        from .utils.sec import key_gen
+
+        if os.environ.get("FLASK_ENV") == "development":
+            credential = "admin"  # admin admin (development mode)
+        else:
+            credential = key_gen(18)  # set random (production mode)
         db.create_all()
         admin_user = User(
             username="admin",
@@ -44,7 +44,9 @@ def init_db(database_path):
         set_config_defaults()
         return render_template("bootstrap.html", credential=credential)
     else:
-        _LOG.warning("An attempt to create the existing database was made")
+        current_app.logger.warning(
+            "An attempt to create the existing database was made"
+        )
         flash("Database already exists")
         return redirect(url_for("auth.page_login"))
 
@@ -53,6 +55,7 @@ class Osgs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True)
     created = db.Column(db.DateTime, default=datetime.utcnow)
+    fqdn = db.Column(db.String(255))
     root = db.Column(db.String(255))
     # Store generic config as json object to allow dynamic values as
     # needed, whilst keeping data consolidated in the sqlite db for
@@ -65,6 +68,7 @@ class Osgs(db.Model):
         self.id = kwargs.get("id")
         self.name = kwargs.get("name")
         self.created = kwargs.get("created")
+        self.fqdn = kwargs.get("fqdn")
         self.root = kwargs.get("root")
         self.config = kwargs.get("config")
         db.session.commit()
@@ -76,6 +80,7 @@ def set_config_defaults():
 
     config_defaults = Osgs(
         name="Open Source GIS Stack",
+        fqdn="www.example.com",
         root=os.path.join(os.path.realpath(os.path.dirname(__file__)), "osgs"),
         config=json.dumps(osgs_default_config),
     )

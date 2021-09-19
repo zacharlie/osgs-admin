@@ -3,3 +3,7 @@ uWSGI
 Flask-Login
 Flask-SQLAlchemy
 docker-compose
+requests
+ruamel.yaml
+rq
+rq-dashboard

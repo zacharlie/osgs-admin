@@ -8,6 +8,10 @@ This application is designed to run system commands against a subdirectory which
 
 > **TL;DR** Do not publish this interface as a public facing web application. Only access it via local network, VPN, or similar
 
+## Platform
+
+The admin service is a flask application that is relying on [RQ](https://python-rq.org/), which in turn relies on fork() processes not available on windows unless run under emulation services such as WSL. The system has been designed for utilisation within a docker environment.
+
 ## Database
 
 The database is a simple sqlite database. If the database is not found the system will generate a new one.
@@ -19,4 +23,3 @@ At this time only "all or nothing" credentials are supplied. User roles have lim
 ## Passwords
 
 The application bootstraps a database with the default username and password `admin`. Although it is highly recommended that this be changed immediately, such behaviours are not enforced. In addition, there is no constraint on the password complexity. Managing the application security is left up to the sysadmin.
-

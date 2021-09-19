@@ -9,42 +9,46 @@
 
     {% block css %}
     <!-- CSS Framework -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
-    <!-- <link rel="stylesheet" href="/static/css/bulma/0.9.2/bulma.min.css"> -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"> -->
+    <link rel="stylesheet" href="/static/css/bulma/bulma.min.css">
+
     <!-- Style -->
     <link rel="stylesheet" href="/static/css/main.css">
 
     <!-- Material Design Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
+    <link rel="stylesheet" href="/static/css/material-design-icons/material-design-icons.css">
 
-    <style>
-        body {
+    <!-- Animate CSS -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" /> -->
+    <link rel="stylesheet" href="/static/css/animate/animate.min.css">
+    {% endblock %}
+
+    {% block mainstyles %}
+    <style>/* should be moved to main.css */
+        .main-block {
             /* make sure the footer doesn't obscure content */
             min-height: calc(100vh+3rem);
-        }
-
-        .osgs-footer {
-            position: fixed;
-            height: 3rem;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            background-color: #f8f8f8;
         }
 
         .hero .box {
             text-shadow: none;
         }
     </style>
+
+    {% block styles %}
     {% endblock %}
 
-    {% block mainstyles %}
     {% endblock %}
 
     {% block javascript %}
     <!-- JS -->
     <script type="application/javascript" src="/static/js/main.js"></script>
+
+    <!-- AlpineJS -->
+    <!-- <script src="//unpkg.com/alpinejs" defer></script> -->
+    <!-- <script src="https://unpkg.com/alpinejs@3.3.4/dist/cdn.min.js" defer></script> -->
+    <script type="application/javascript" src="/static/js/alpinejs/cdn.min.js" defer></script>
     {% endblock %}
 
     {% block favico %}
@@ -100,47 +104,72 @@
             </div>
             <div id="navbarMenu" class="navbar-menu">
                 <div class="navbar-end">
+                    <a href="{{ url_for('main.page_about') }}" class="navbar-item">
+                        <span class="nav-link-element">
+                            <span class="nav-icon icon">
+                                <i class="material-icons" title="About">info</i>
+                            </span>
+                            <span class="nav-link-text pl-2">
+                                About
+                            </span>
+                        </span>
+                    </a>
                     {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('main.page_dashboard') }}" class="navbar-item">
-                        <button class="button is-info is-small">
-                            <span class="icon">
+                    <a href="{{ url_for('auth.page_dashboard') }}" class="navbar-item">
+                        <span class="nav-link-element">
+                            <span class="nav-icon icon">
                                 <i class="material-icons" title="Dashboard">dashboard</i>
                             </span>
-                        </button>
+                            <span class="nav-link-text pl-2">
+                                Dashboard
+                            </span>
+                        </span>
                     </a>
                     {% endif %}
                     {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('main.page_config') }}" class="navbar-item">
-                        <button class="button is-info is-small">
-                            <span class="icon">
+                    <a href="{{ url_for('auth.page_config') }}" class="navbar-item">
+                        <span class="nav-link-element">
+                            <span class="nav-icon icon">
                                 <i class="material-icons" title="Settings">settings</i>
                             </span>
-                        </button>
+                            <span class="nav-link-text pl-2">
+                                Settings
+                            </span>
+                        </span>
                     </a>
                     {% endif %}
                     {% if not current_user.is_authenticated %}
                     <a href="{{ url_for('auth.page_login') }}" class="navbar-item">
-                        <button class="button is-info is-small">
-                            <span class="icon">
+                        <span class="nav-link-element">
+                            <span class="nav-icon icon">
                                 <i class="material-icons" title="Login">login</i>
                             </span>
-                        </button>
+                            <span class="nav-link-text pl-2">
+                                Login
+                            </span>
+                        </span>
                     </a>
                     {% endif %}
                     {% if current_user.is_authenticated %}
                     <a href="{{ url_for('auth.page_users') }}" class="navbar-item">
-                        <button class="button is-info is-small">
-                            <span class="icon">
+                        <span class="nav-link-element">
+                            <span class="nav-icon icon">
                                 <i class="material-icons" title="Users">people</i>
                             </span>
-                        </button>
+                            <span class="nav-link-text pl-2">
+                                Users
+                            </span>
+                        </span>
                     </a>
                     <a href="{{ url_for('auth.page_logout') }}" class="navbar-item">
-                        <button class="button is-info is-small">
-                            <span class="icon">
+                        <span class="nav-link-element">
+                            <span class="nav-icon icon">
                                 <i class="material-icons" title="Logout">logout</i>
                             </span>
-                        </button>
+                            <span class="nav-link-text pl-2">
+                                Logout
+                            </span>
+                        </span>
                     </a>
                     {% endif %}
                 </div>
@@ -150,8 +179,12 @@
     {% endblock %}
 
     {% block main %}
-        {% block content %}
-        {% endblock %}
+    <section class="section main-block">
+        <div class="container content-block is-fullwidth has-text-centered">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </section>
     {% endblock %}
 
     {% block footer %}
@@ -165,6 +198,10 @@
         </div>
     </div>
     {% endblock %}
+
+    {% block tail %}
+    {% endblock %}
+
 </body>
 
 

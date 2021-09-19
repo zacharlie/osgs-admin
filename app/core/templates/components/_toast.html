@@ -1,0 +1,14 @@
+{%- macro toast(target, btn='Notify', classes='is-info', content='') -%}
+{% set operation = [target|replace(" ","")|lower,'showToast']|join %}
+<div x-data="{ {{ operation }}: false}">
+  <button @click="{{ operation }} = true" class="button is-info">{{ btn }}</button>
+  <div class="column is-6 is-offset-3 toast"
+  x-show="{{ operation }}" x-transition:enter="show-toast" x-transition:leave="animate__animated animate__fadeOutDown"
+  >
+    <div class="notification {{ classes }}">
+      <button class="delete" @click="{{ operation }} = false"></button>
+      {{ content|safe }}
+    </div>
+  </div>
+</div>
+{%- endmacro -%}

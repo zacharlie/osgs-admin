@@ -1,0 +1,90 @@
+<!-- Reactive page example using alpinejs -->
+{% extends "_main.html" %}
+
+{% from 'components/_modal.html' import modal %}
+{% from 'components/_modal.html' import help %}
+{% from 'components/_toast.html' import toast %}
+{% from 'utils/_generics.html' import generate_unique_id as uuid %}
+
+{% block scripts %}
+<script>
+  function getProgress(interval=5, ceiling=50){
+    return {
+      progress: 0,
+      init(){
+        process = setInterval(() => {
+          if (this.progress < ceiling) {
+            this.progress += interval
+            console.log(this.progress)
+          } else {
+            clearInterval(this.process)
+          }
+        }, 5000);
+      }
+    }
+  }
+</script>
+{% endblock %}
+
+{% block content %}
+
+<p>Just doin some dev work on reactive elements</p>
+
+<progress class="progress is-info" value="45" max="100">45%</progress>
+
+<div x-data>
+
+  <input type="text" x-ref="content" value="Some Content">
+
+  <button @click="navigator.clipboard.writeText($refs.content.value)">
+    Copy
+  </button>
+
+</div>
+
+<div x-data>
+
+  <button @click="$refs.text.remove()">Remove Text</button>
+
+  <br>
+
+  <span x-ref="text">Hello 👋</span>
+
+</div>
+
+<div x-data>
+  <button @click="alert('WTF')">@Click</button>
+</div>
+
+<br>
+
+<button onclick="alert('WTF')">onclick</button>
+
+<div x-data>
+  Copyright © <span x-text="new Date().getFullYear()"></span>
+</div>
+
+
+<div x-data="getProgress(1, 15)" x-init="init">
+  <progress class="progress is-info" x-bind:value="progress" max="100"></progress>
+</div>
+<div x-effect="console.log('Count is '+count)"></div>
+
+{{ modal('modalOne', content='
+Lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor.
+<strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla.
+Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam,
+et dictum <a>felis venenatis</a> efficitur.
+') }}
+
+{{ help('helpOne', content='
+Some Help Text
+') }}
+
+{{ toast('notificationOne', content='
+<strong>Lorem ipsum dolor sit amet,</strong> consectetur adipiscing elit lorem ipsum dolor.
+') }}
+
+</div>
+
+{% endblock %}

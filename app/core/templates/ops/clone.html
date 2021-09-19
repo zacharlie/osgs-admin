@@ -4,9 +4,17 @@
 <div class="column is-8 is-offset-2">
     <h3 class="title">System Configuration</h3>
     <div class="box">
-        {% with messages = get_flashed_messages() %}
+        <p>{{eg}}</p>
+        {% with messages = get_flashed_messages(category_filter!=["error"]) %}
         {% if messages %}
         <div class="notification is-info">
+            {{ messages[0] }}.
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+        {% if messages %}
+        <div class="notification is-danger">
             {{ messages[0] }}.
         </div>
         {% endif %}
@@ -14,7 +22,7 @@
         <p>
             {{hw}}
         </p>
-        <form method="POST" action="/config">
+        <form method="POST" action="/ops/clone">
 
             <div class="field">
                 <div class="field-label has-text-left">
