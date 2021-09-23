@@ -1,14 +1,9 @@
 from redis import Redis
 from rq import Queue, Worker
 
-redis = Redis()
+redis = Redis(host="redis", port=6379, db=0, password=None, socket_timeout=None)
 
-q = Queue(
-    "main",
-    connection=Redis(
-        host="localhost", port=6379, db=0, password=None, socket_timeout=None
-    ),
-)
+q = Queue("main", connection=redis)
 
 workers = Worker.all(queue=q)
 for worker in workers:

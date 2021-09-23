@@ -9,6 +9,8 @@ services:
         SOURCE: "${HOT_FLASK_APP_SOURCE}"
       context: .
       dockerfile: dockerfile-flask
+    depends_on:
+      - redis
     restart: always
     volumes:
       - "${HOT_FLASK_APP_SOURCE}:${HOT_FLASK_APP_TARGET}"
@@ -20,6 +22,8 @@ services:
         TARGET: "${HOT_FLASK_APP_TARGET}"
       context: .
       dockerfile: dockerfile-watchdog
+    depends_on:
+      - flask
     restart: always
     volumes:
       - "${HOT_FLASK_APP_SOURCE}:${HOT_FLASK_APP_TARGET}"
@@ -33,4 +37,8 @@ services:
       - 5000:80
     depends_on:
       - flask
+    restart: always
+
+  redis:
+    image: redis:alpine3.14
     restart: always

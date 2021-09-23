@@ -53,6 +53,8 @@ def create_app():
 
     from . import tasks
 
+    app.config["RQ_DASHBOARD_REDIS_URL"] = "redis://redis:6379"
+
     # rq_dashboard.blueprint.before_request(bp_login_required)
     app.register_blueprint(rq_dashboard.blueprint, url_prefix="/jobs")
 
