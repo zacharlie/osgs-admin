@@ -1,0 +1,32 @@
+{% extends "_main.html" %}
+
+{% block scripts %}
+<script>
+  function getProgress(job){
+    return {
+      progress: 0,
+      init(){
+        process = setInterval(() => {
+          if (this.progress < ceiling) {
+            this.progress += interval
+            console.log(this.progress)
+          } else {
+            clearInterval(this.process)
+          }
+        }, 5000);
+      }
+    }
+  }
+</script>
+{% endblock %}
+
+{% block content %}
+
+{{ job_id }}
+
+<div x-data="getProgress(1, 15)" x-init="init">
+  <progress class="progress is-info" x-bind:value="progress" max="100"></progress>
+</div>
+<div x-effect="console.log('Count is '+count)"></div>
+
+{% endblock %}

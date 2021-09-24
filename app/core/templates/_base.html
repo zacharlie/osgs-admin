@@ -104,16 +104,6 @@
             </div>
             <div id="navbarMenu" class="navbar-menu">
                 <div class="navbar-end">
-                    <a href="{{ url_for('main.page_about') }}" class="navbar-item">
-                        <span class="nav-link-element">
-                            <span class="nav-icon icon">
-                                <i class="material-icons" title="About">info</i>
-                            </span>
-                            <span class="nav-link-text pl-2">
-                                About
-                            </span>
-                        </span>
-                    </a>
                     {% if current_user.is_authenticated %}
                     <a href="{{ url_for('auth.page_dashboard') }}" class="navbar-item">
                         <span class="nav-link-element">
@@ -139,6 +129,16 @@
                     </a>
                     {% endif %}
                     {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('main.page_about') }}" class="navbar-item">
+                        <span class="nav-link-element">
+                            <span class="nav-icon icon">
+                                <i class="material-icons" title="About">info</i>
+                            </span>
+                            <span class="nav-link-text pl-2">
+                                About
+                            </span>
+                        </span>
+                    </a>
                     <a href="{{ url_for('auth.page_login') }}" class="navbar-item">
                         <span class="nav-link-element">
                             <span class="nav-icon icon">

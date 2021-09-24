@@ -11,6 +11,25 @@ Ain't nuthin ta see here
 <br>
 <br>
 
-{{ result }}
+{% if not result %}
+<p>
+<br>
+</p>
+{% endif %}
+{% if result %}
+<p>
+    {{ result.id }}
+</p>
+<p>
+    <a href="/task/progress/{{ result.id }}">
+        Progress
+    </a>
+</p>
+<p>
+    <a href="/task/status/{{ result.id }}">
+        Status
+    </a>
+</p>
+{% endif %}
 
 {% endblock %}

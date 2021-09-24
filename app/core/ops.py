@@ -1,6 +1,5 @@
-from flask import Blueprint, g, render_template, flash
+from flask import Blueprint, g, render_template, flash, jsonify
 from flask_login import login_required
-from pathlib import Path
 
 ops = Blueprint("ops", __name__)
 
@@ -15,6 +14,55 @@ from .utils import hello_world, hello_sleepy_world
 @ops.route("/examples/reactive")
 def page_eg_reactive():
     return render_template("ops/reactive.html")
+
+
+@ops.route("/task/example", methods=["get"])
+def page_task_example():
+    result = None
+    return render_template("ops/setup.html", result=result)
+
+
+@ops.route("/task/example", methods=["POST"])
+def form_task_example_post():
+    from .tasks import test_task
+    from .tasks.test_task import do_something
+
+    # job = test_task.do_something()
+    job = do_something()
+
+    if job:
+        result = {
+            "id": job.get_id(),
+        }
+    else:
+        result = None
+
+    return render_template("ops/setup.html", result=result)
+
+
+@ops.route("/task/progress/<job_id>", methods=["GET"])
+def page_task_progress(job_id):
+    return render_template("ops/progress.html", job_id=job_id)
+
+
+@ops.route("/task/status/<job_id>", methods=["GET"])
+def rest_task_status(job_id):
+    from .tasks.utils import get_rq_job
+
+    job = get_rq_job(job_id)
+
+    if job:
+        status = {
+            "id": job_id,
+            "state": job.get_status(),
+            "progress": job.meta.get("progress"),
+            "result": job.result,
+            "complete": job.is_finished,
+        }
+    else:
+        status = None
+
+    return jsonify(status)
 
 
 ##################################################
