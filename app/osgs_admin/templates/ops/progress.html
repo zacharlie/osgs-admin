@@ -22,7 +22,7 @@
 
 {% block content %}
 
-{{ job_id }}
+{{ task_id }}
 
 <div x-data="getProgress(1, 15)" x-init="init">
   <progress class="progress is-info" x-bind:value="progress" max="100"></progress>

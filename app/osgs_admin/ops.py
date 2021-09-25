@@ -24,15 +24,13 @@ def page_task_example():
 
 @ops.route("/task/example", methods=["POST"])
 def form_task_example_post():
-    from .tasks import test_task
-    from .tasks.test_task import do_something
+    from .tasks.utils import long_task
 
-    # job = test_task.do_something()
-    job = do_something()
+    task = long_task.apply_async()
 
-    if job:
+    if task:
         result = {
-            "id": job.get_id(),
+            "id": task.id,
         }
     else:
         result = None
@@ -40,29 +38,44 @@ def form_task_example_post():
     return render_template("ops/setup.html", result=result)
 
 
-@ops.route("/task/progress/<job_id>", methods=["GET"])
-def page_task_progress(job_id):
-    return render_template("ops/progress.html", job_id=job_id)
+@ops.route("/task/progress/<task_id>", methods=["GET"])
+def page_task_progress(task_id):
+    return render_template("ops/progress.html", task_id=task_id)
 
 
-@ops.route("/task/status/<job_id>", methods=["GET"])
-def rest_task_status(job_id):
-    from .tasks.utils import get_rq_job
+@ops.route("/task/status/<task_id>", methods=["GET"])
+def rest_task_status(task_id):
+    from celery.result import AsyncResult
+    from .tasks import celery
 
-    job = get_rq_job(job_id)
-
-    if job:
-        status = {
-            "id": job_id,
-            "state": job.get_status(),
-            "progress": job.meta.get("progress"),
-            "result": job.result,
-            "complete": job.is_finished,
+    # task = long_task.AsyncResult(task_id)
+    task = AsyncResult(task_id, app=celery)
+    if task.state == "PENDING":
+        # job did not start yet
+        response = {
+            "state": task.state,
+            "current": 0,
+            "total": 1,
+            "status": "Pending...",
         }
+    elif task.state != "FAILURE":
+        response = {
+            "state": task.state,
+            "current": task.info.get("current", 0),
+            "total": task.info.get("total", 1),
+            "status": task.info.get("status", ""),
+        }
+        if "result" in task.info:
+            response["result"] = task.info["result"]
     else:
-        status = None
-
-    return jsonify(status)
+        # something went wrong in the background job
+        response = {
+            "state": task.state,
+            "current": 1,
+            "total": 1,
+            "status": str(task.info),  # this is the exception raised
+        }
+    return jsonify(response)
 
 
 ##################################################

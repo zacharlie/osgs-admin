@@ -1,13 +1,8 @@
-# Operations utils
-# mostly for testing and dev - a bunch need to become celery tasks
-
 from flask import flash
 import subprocess
 import json
 
-import ruamel.yaml  # Replace pyyaml and support quotes, comments, and literals
-
-# import yaml  # Uses pyyaml, superseded by ruamel
+import ruamel.yaml
 
 
 def hello_world():
@@ -59,16 +54,3 @@ def write_yaml(data, output_file):
     yaml.preserve_quotes = True
     yaml.allow_duplicate_keys = True
     yaml.dump(data, output_file)
-
-
-## def read_yaml(input_file):  # Uses pyyaml, superseded by ruamel
-##     with input_file as f:
-##         # doc = yaml.load(f, Loader=yaml.BaseLoader)
-##         # doc = yaml.load(f, Loader=yaml.SafeLoader)
-##         # doc = yaml.load(f, Loader=yaml.FullLoader)
-##         doc = yaml.load(f, Loader=yaml.UnsafeLoader)
-##         return doc
-
-## def write_yaml(data, output_file):  # Uses pyyaml, superseded by ruamel
-##     with output_file as f:
-##         yaml.dump(data, f, default_flow_style=False, sort_keys=False)

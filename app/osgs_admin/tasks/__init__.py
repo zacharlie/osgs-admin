@@ -1,26 +1,76 @@
-from redis import Redis
-from rq import Queue, Worker
+from celery import Celery, current_app
 
-# redis = Redis(host="redis", port=6379, db=0, password=None, socket_timeout=None)
-# redis = Redis.from_url("redis://redis:6379")
-redis = Redis(host="redis", port=6379)
+# from app import celery
+from app import app
 
-q = Queue("main", connection=redis)
-# q = Queue("main", connection=Redis.from_url("redis://redis:6379"))
+# from celery.bin import worker as celery_worker
+from osgs_admin import create_app
 
-workers = Worker.all(queue=q)
-for worker in workers:
-    worker.register_death()
 
-# worker1 = Worker(q, connection=Redis.from_url("redis://redis:6379"))
-# worker1 = Worker(q, connection=Redis.from_url("redis://redis:6379"), name="worker-01")
-# worker1 = Worker("main", connection=redis, name="worker-01")
-# worker1 = Worker([q], connection=Redis.from_url("redis://redis:6379"), name="worker-01")
-worker1 = Worker([q], connection=redis, name="worker-01")
-worker1.register_birth()
-# worker2 = Worker([q], connection=redis, name="worker-02")
-# worker2.register_birth()
-# worker3 = Worker([q], connection=redis, name="worker-03")
-# worker3.register_birth()
-# worker4 = Worker([q], connection=redis, name="worker-04")
-# worker4.register_birth()
+def make_celery(app):
+    celery = Celery(
+        app.import_name,
+        backend=app.config["RESULT_BACKEND"],
+        broker=app.config["CELERY_BROKER_URL"],
+        include=["osgs_admin.tasks"],
+    )
+    celery.conf.update(app.config)
+    celery.autodiscover_tasks(["osgs_admin.tasks", "osgs_admin.tasks.utils"])
+    # celery.autodiscover_tasks("osgs_admin")
+    # celery.autodiscover_tasks("osgs_admin.tasks")
+
+    # application = current_app._get_current_object()
+    # worker = celery_worker.worker(app=application)
+    # options = {
+    #     "broker": app.config["CELERY_BROKER_URL"],
+    #     "loglevel": "INFO",
+    #     "traceback": True,
+    # }
+
+    # worker.run(**options)
+    # worker = celery_worker.worker()
+    # worker = celery_worker.worker(app)
+    # worker.run(loglevel="INFO")
+
+    class ContextTask(celery.Task):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
+
+
+def spawn_celery_worker(app, worker_name):
+    import subprocess
+
+    output = subprocess.run(
+        [
+            "bash",
+            "-c",
+            f"celery -A {app.import_name}.tasks.celery worker --loglevel=INFO --concurrency=10 -n {worker_name}@flask",
+        ],
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    ).stdout
+    return output
+
+
+# app = create_app()
+celery = make_celery(app)
+
+
+"""
+app = create_app()
+
+celery = make_celery(app)
+application = current_app._get_current_object()
+
+worker = celery_worker.worker(application)
+worker.run(loglevel="INFO")
+
+# start celery workers
+# spawn_celery_worker(app, "myworker")
+
+"""

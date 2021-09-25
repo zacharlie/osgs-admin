@@ -2,14 +2,8 @@ from flask import Flask, g, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required
 import os
-import rq_dashboard
 
 db = SQLAlchemy()
-
-import logging
-
-log = logging.getLogger("werkzeug")
-log.setLevel(logging.ERROR)
 
 
 def create_app():
@@ -56,15 +50,9 @@ def create_app():
 
     app.register_blueprint(ops_blueprint)
 
-    from . import tasks
-
-    app.config["RQ_DASHBOARD_REDIS_URL"] = "redis://redis:6379"
-
-    # rq_dashboard.blueprint.before_request(bp_login_required)
-    app.register_blueprint(rq_dashboard.blueprint, url_prefix="/jobs")
-
-    # app.config["RQ_DASHBOARD_USERNAME"] = "admin"
-    # app.config["RQ_DASHBOARD_PASSWORD"] = "admin"
+    # set celery config
+    app.config["RESULT_BACKEND"] = "redis://redis:6379/0"
+    app.config["CELERY_BROKER_URL"] = "redis://redis:6379/0"
 
     # Bootstrap process for initiating new database
     @app.route("/bootstrap", methods=["POST"])
