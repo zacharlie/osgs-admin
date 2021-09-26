@@ -30,6 +30,13 @@
 
 {% block content %}
 
+<div x-data="{ customProperty: true }">
+  <button @click="customProperty = !customProperty">Toggle Loader</button>
+  <div class="loader-wrapper is-flex is-align-items-center is-justify-content-center">
+    <div x-bind:class="{ 'is-hidden': customProperty }" style="height:100px; width:100px;" class="loader is-loading"></div>
+  </div>
+</div>
+
 <p>Just doin some dev work on reactive elements</p>
 
 <progress class="progress is-info" value="45" max="100">45%</progress>
