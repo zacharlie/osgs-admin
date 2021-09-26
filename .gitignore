@@ -1,4 +1,7 @@
-# explicit ignore files and directories
+# Stuff
+code.cmd
+
+# Explicit ignore files and directories
 *.ignore
 .ignore/*
 
