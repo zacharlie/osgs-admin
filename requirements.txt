@@ -3,6 +3,8 @@ uWSGI
 Flask-Login
 Flask-SQLAlchemy
 docker-compose
+docker
 requests
 ruamel.yaml
 celery[redis]
+gitpython
