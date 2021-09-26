@@ -1,7 +1,7 @@
 from flask import Flask, g, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required
-import os
+from os import path, environ
 
 db = SQLAlchemy()
 
@@ -23,8 +23,8 @@ def create_app():
     app.config["SQLALCHEMY_ECHO"] = True
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    app.app_dir = os.path.realpath(os.path.dirname(__file__))
-    app.database_path = os.path.join(app.app_dir, app.config["DATABASE_FILE"])
+    app.app_dir = path.realpath(path.dirname(__file__))
+    app.database_path = path.join(app.app_dir, app.config["DATABASE_FILE"])
 
     db.init_app(app)
 
@@ -51,8 +51,8 @@ def create_app():
     app.register_blueprint(ops_blueprint)
 
     # set celery config
-    app.config["RESULT_BACKEND"] = "redis://redis:6379/0"
-    app.config["CELERY_BROKER_URL"] = "redis://redis:6379/0"
+    app.config["RESULT_BACKEND"] = environ["CELERY_RESULT_BACKEND"]
+    app.config["CELERY_BROKER_URL"] = environ["CELERY_BROKER_URL"]
 
     # Bootstrap process for initiating new database
     @app.route("/bootstrap", methods=["POST"])
@@ -125,5 +125,5 @@ def bp_login_required():
 
 
 def check_db(database_path):
-    db_exists = True if os.path.exists(database_path) else False
+    db_exists = True if path.exists(database_path) else False
     return db_exists

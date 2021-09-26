@@ -1,10 +1,5 @@
-from celery import Celery, current_app
-
-# from app import celery
+from celery import Celery
 from app import app
-
-# from celery.bin import worker as celery_worker
-from osgs_admin import create_app
 
 
 def make_celery(app):
@@ -15,22 +10,9 @@ def make_celery(app):
         include=["osgs_admin.tasks"],
     )
     celery.conf.update(app.config)
+
+    # register all the classes celery will process
     celery.autodiscover_tasks(["osgs_admin.tasks", "osgs_admin.tasks.utils"])
-    # celery.autodiscover_tasks("osgs_admin")
-    # celery.autodiscover_tasks("osgs_admin.tasks")
-
-    # application = current_app._get_current_object()
-    # worker = celery_worker.worker(app=application)
-    # options = {
-    #     "broker": app.config["CELERY_BROKER_URL"],
-    #     "loglevel": "INFO",
-    #     "traceback": True,
-    # }
-
-    # worker.run(**options)
-    # worker = celery_worker.worker()
-    # worker = celery_worker.worker(app)
-    # worker.run(loglevel="INFO")
 
     class ContextTask(celery.Task):
         def __call__(self, *args, **kwargs):
@@ -57,20 +39,6 @@ def spawn_celery_worker(app, worker_name):
     return output
 
 
-# app = create_app()
+# Use app context and celery factory to define
+# celery object for use as the app task decorator
 celery = make_celery(app)
-
-
-"""
-app = create_app()
-
-celery = make_celery(app)
-application = current_app._get_current_object()
-
-worker = celery_worker.worker(application)
-worker.run(loglevel="INFO")
-
-# start celery workers
-# spawn_celery_worker(app, "myworker")
-
-"""

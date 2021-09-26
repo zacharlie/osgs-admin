@@ -2,21 +2,50 @@
 
 {% block scripts %}
 <script>
-  function getProgress(job){
+
+/*getItems() {
+    fetch(this.getEndpoint('api url endpoint"))
+      .then(result => result.json())
+      .then(result => this.setState({ items: result }));
+  }*/
+
+  async function fetchStatus(job_id) {
+    try {
+      const response = await fetch(`/task/status/${job_id}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (e) {
+      console.log('Job Status Error:', e);
+    }
+  }
+
+  function getProgress(job_id){
     return {
       progress: 0,
+      taskStatus: {"current":0,"result":"","state":"UNDEFINED","status":"UNDEFINED","total":100},
       init(){
-        process = setInterval(() => {
-          if (this.progress < ceiling) {
-            this.progress += interval
+        const process = setInterval(async () => {
+
+          taskStatus = await fetchStatus(job_id)
+          var current = taskStatus.current
+
+          if (current < 100) {
+            this.progress = current
             console.log(this.progress)
           } else {
-            clearInterval(this.process)
+            this.progress = 100
+            console.log(this.progress)
+            clearInterval(process)
+            console.log("clear")
           }
-        }, 5000);
+        }, 1000);
       }
     }
   }
+
 </script>
 {% endblock %}
 
@@ -24,7 +53,7 @@
 
 {{ task_id }}
 
-<div x-data="getProgress(1, 15)" x-init="init">
+<div x-data="getProgress('{{ task_id }}')" x-init="init">
   <progress class="progress is-info" x-bind:value="progress" max="100"></progress>
 </div>
 <div x-effect="console.log('Count is '+count)"></div>

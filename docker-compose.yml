@@ -10,8 +10,8 @@ services:
     ports:
       - 5555:5555
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - RESULT_BACKEND=redis://redis:6379/0
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
     depends_on:
       - redis
     restart: always
@@ -20,52 +20,44 @@ services:
     image: webapp-flask
     build:
       args:
-        TARGET: "${HOT_FLASK_APP_TARGET}"
-        SOURCE: "${HOT_FLASK_APP_SOURCE}"
+        TARGET: "${FLASK_APP_TARGET}"
+        SOURCE: "${FLASK_APP_SOURCE}"
       context: .
       dockerfile: dockerfile-flask
+    environment:
+      - FLASK_ENV="production"
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
     depends_on:
       - redis
     restart: always
     volumes:
-      - "${HOT_FLASK_APP_SOURCE}:${HOT_FLASK_APP_TARGET}"
+      - "${FLASK_APP_SOURCE}:${FLASK_APP_TARGET}"
 
-  workerOne:
+  worker:
     image: webapp-flask
     command: celery -A osgs_admin.tasks.celery worker -l INFO
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
     depends_on:
       - flask
     restart: always
     volumes:
-      - "${HOT_FLASK_APP_SOURCE}:${HOT_FLASK_APP_TARGET}"
-
-  workerTwo:
-    image: webapp-flask
-    command: celery -A osgs_admin.tasks.celery worker -l INFO
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-    depends_on:
-      - flask
-    restart: always
-    volumes:
-      - "${HOT_FLASK_APP_SOURCE}:${HOT_FLASK_APP_TARGET}"
+      - "${FLASK_APP_SOURCE}:${FLASK_APP_TARGET}"
 
   watchdog:
     image: webapp-watchdog
     build:
       args:
-        TARGET: "${HOT_FLASK_APP_TARGET}"
+        TARGET: "${FLASK_APP_TARGET}"
       context: .
       dockerfile: dockerfile-watchdog
     depends_on:
       - flask
     restart: always
     volumes:
-      - "${HOT_FLASK_APP_SOURCE}:${HOT_FLASK_APP_TARGET}"
+      - "${FLASK_APP_SOURCE}:${FLASK_APP_TARGET}"
 
   nginx:
     image: webapp-nginx
@@ -73,7 +65,7 @@ services:
       context: .
       dockerfile: dockerfile-nginx
     ports:
-      - 5000:80
+      - ${APP_PUBLIC_PORT}:80
     depends_on:
       - flask
     restart: always

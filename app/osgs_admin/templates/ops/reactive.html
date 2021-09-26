@@ -12,14 +12,16 @@
     return {
       progress: 0,
       init(){
-        process = setInterval(() => {
+        const process = setInterval(() => {
           if (this.progress < ceiling) {
             this.progress += interval
             console.log(this.progress)
           } else {
-            clearInterval(this.process)
+            clearInterval(process)
+            console.log(process)
+            console.log("clear")
           }
-        }, 5000);
+        }, 1000);
       }
     }
   }
