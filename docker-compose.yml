@@ -28,7 +28,6 @@ services:
       - FLASK_ENV="production"
       - CELERY_BROKER_URL=${CELERY_BROKER_URL}
       - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
-      - FLASK_APP_ROOT=${FLASK_APP_TARGET}
     depends_on:
       - redis
     restart: always
