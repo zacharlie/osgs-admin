@@ -33,6 +33,7 @@ services:
     restart: always
     volumes:
       - "${FLASK_APP_SOURCE}:${FLASK_APP_TARGET}"
+      - //var/run/docker.sock:/var/run/docker.sock
 
   worker:
     image: webapp-flask
