@@ -6,19 +6,17 @@ Administration and management console for the [Open Source GIS Stack](https://gi
 
 This application is designed to run system commands against a subdirectory which holds the Open Source GIS Stack. As such, there are serious security implications regarding the exposure of this interface. The primary aim of this application is to provide a user interface for management operations which can be conveniently run on a server, and it is recommended that this infrastructure is isolated at the network level.
 
-> **TL;DR** Do not publish this interface as a public facing web application. Only access it via local network, VPN, or similarly isolated environment.
+> **TL;DR** Do not publish this admin interface or it's host port as a public facing web application. Only access it via local network, VPN, or similarly isolated environment.
 
 ## Security
 
 The system is designed to run docker commands from the context of the docker host machine.
 
-Possibility to set up ssh to another busybox like:
+It does this by mounting the hosts docker socket as `//var/run/docker.sock:/var/run/docker.sock` and then leveraging the python [docker-compose](https://pypi.org/project/docker-compose/) library into the main flask application. Whilst this is constrained to the running containers and the existing mounted volumes, it of course opens the system up to the possibility of breakouts.
 
-```
-docker run -it --privileged docker:dind-rootless
-```
+In addition, the application uses the python subprocessing module to execute shell commands (within the container) for stack configuration purposes.
 
-Or is that a horrible idea?
+> **TL;DR** Do not publish this admin interface or it's host port as a public facing web application. Only access it via local network, VPN, or similarly isolated environment.
 
 ## Platform
 
