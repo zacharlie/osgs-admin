@@ -10,18 +10,15 @@ This application is designed to run system commands against a subdirectory which
 
 ## Security
 
-The system is designed to run docker commands from the context of the docker host machine. API will be great buuuuut we might just use [the most pointless command ever](https://zwischenzugs.com/2015/06/24/the-most-pointless-docker-command-ever/). Time will tell.
+The system is designed to run docker commands from the context of the docker host machine.
 
-Honestly this seems like a bad idea:
+Possibility to set up ssh to another busybox like:
 
 ```
-docker run -ti
-    --privileged
-    --net=host --pid=host --ipc=host
-    --volume /:/host
-    busybox
-    chroot /host
+docker run -it --privileged docker:dind-rootless
 ```
+
+Or is that a horrible idea?
 
 ## Platform
 
