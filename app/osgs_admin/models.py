@@ -76,7 +76,7 @@ class Osgs(db.Model):
 
 def set_config_defaults():
 
-    from .config import osgs_default_config
+    from .config.osgs_default_config import osgs_default_config
 
     config_defaults = Osgs(
         name="Open Source GIS Stack",

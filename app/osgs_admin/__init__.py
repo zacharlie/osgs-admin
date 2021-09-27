@@ -38,19 +38,17 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    with app.app_context():
+    from .auth import auth as auth_blueprint
 
-        from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint)
 
-        app.register_blueprint(auth_blueprint)
+    from .main import main as main_blueprint
 
-        from .main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
 
-        app.register_blueprint(main_blueprint)
+    from .ops import ops as ops_blueprint
 
-        from .ops import ops as ops_blueprint
-
-        app.register_blueprint(ops_blueprint)
+    app.register_blueprint(ops_blueprint)
 
     # set celery config
     app.config["RESULT_BACKEND"] = environ["CELERY_RESULT_BACKEND"]
