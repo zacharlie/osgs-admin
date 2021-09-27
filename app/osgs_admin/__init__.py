@@ -6,25 +6,40 @@ from os import path, environ
 db = SQLAlchemy()
 
 
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__)
 
-    # app.config["SECRET_KEY"] = "fzHofj7khjMslfoTVU5OONxqkcmCYPxBE5BygBaW9zyqT"
-    # generate randomised secret key for session signing. It may break active sessions
-    # on reinstantiation of the app, and may be served better by a k8s secret or something.
-    # At this point in time it seems reasonable to use a random key for user deploys,
-    # but this needs to be consistent when using a load balancer or distributed deploy
-    from .utils.sec import key_gen
+    app.config.from_mapping(
+        # app secret should be overridden by instance config
+        SECRET_KEY="developmentkey",
+        DATABASE=path.join(app.instance_path, "adminapp.sqlite"),
+    )
 
-    app.config["SECRET_KEY"] = key_gen(82)
-    app.config["DATABASE_FILE"] = "db.sqlite"
-    # db path uses sqlite:/// for relative and sqlite://// for absolute
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + app.config["DATABASE_FILE"]
-    app.config["SQLALCHEMY_ECHO"] = True
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    if test_config is None:
+        # load the instance config, if it exists, when not testing
+        # app.config.from_pyfile("config.py", silent=True)
 
-    app.app_dir = path.realpath(path.dirname(__file__))
-    app.database_path = path.join(app.app_dir, app.config["DATABASE_FILE"])
+        # app.config["SECRET_KEY"] = "fzHofj7khjMslfoTVU5OONxqkcmCYPxBE5BygBaW9zyqT"
+        # generate randomised secret key for session signing. It may break active sessions
+        # on reinstantiation of the app, and may be served better by a k8s secret or something.
+        # At this point in time it seems reasonable to use a random key for user deploys,
+        # but this needs to be consistent when using a load balancer or distributed deploy
+        from .utils.sec import key_gen
+
+        app.config["SECRET_KEY"] = key_gen(82)
+        app.config["DATABASE_FILE"] = "db.sqlite"
+        # db path uses sqlite:/// for relative and sqlite://// for absolute
+        app.config["SQLALCHEMY_DATABASE_URI"] = (
+            "sqlite:///" + app.config["DATABASE_FILE"]
+        )
+        app.config["SQLALCHEMY_ECHO"] = True
+        app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+        app.app_dir = path.realpath(path.dirname(__file__))
+        app.database_path = path.join(app.app_dir, app.config["DATABASE_FILE"])
+    else:
+        # load testing config
+        app.config.update(test_config)
 
     db.init_app(app)
 
