@@ -37,6 +37,11 @@ def create_app(test_config=None):
 
         app.app_dir = path.realpath(path.dirname(__file__))
         app.database_path = path.join(app.app_dir, app.config["DATABASE_FILE"])
+
+        # set celery config
+        app.config["RESULT_BACKEND"] = environ["CELERY_RESULT_BACKEND"]
+        app.config["CELERY_BROKER_URL"] = environ["CELERY_BROKER_URL"]
+
     else:
         # load testing config
         app.config.update(test_config)
@@ -65,11 +70,8 @@ def create_app(test_config=None):
 
     app.register_blueprint(ops_blueprint)
 
-    # set celery config
-    app.config["RESULT_BACKEND"] = environ["CELERY_RESULT_BACKEND"]
-    app.config["CELERY_BROKER_URL"] = environ["CELERY_BROKER_URL"]
-
     # Bootstrap process for initiating new database
+    @login_required
     @app.route("/bootstrap", methods=["POST"])
     def page_bootstrap():
         from .models import init_db as initialize_database
