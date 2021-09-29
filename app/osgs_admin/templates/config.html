@@ -18,7 +18,7 @@
 
             <div class="field">
                 <div class="field-label has-text-left">
-                    <label class="label">System Name</label>
+                    <label class="label" title="Site and System Name">System Name</label>
                 </div>
                 <div class="field-body">
                     <div class="field">
@@ -32,13 +32,13 @@
 
             <div class="field">
                 <div class="field-label has-text-left">
-                    <label class="label">Root</label>
+                    <label class="label" title="Site FQDN">Domain Name</label>
                 </div>
                 <div class="field-body">
                     <div class="field">
                         <p class="control">
-                            <input class="input" type="text" name="root"
-                                value="{{ osgs.root }}">
+                            <input class="input" type="text" name="name"
+                                value="{{ osgs.fqdn }}">
                         </p>
                     </div>
                 </div>
@@ -46,14 +46,61 @@
 
             <div class="field">
                 <div class="field-label has-text-left">
-                    <label class="label">Target Repository</label>
+                    <label class="label" title="Base Directory for Repository">OSGS Root</label>
                 </div>
                 <div class="field-body">
                     <div class="field">
-                        <p class="control">
+                        <p class="control has-icons-left">
+                            <input class="input" type="text" name="root"
+                                value="{{ osgs.root }}" readonly>
+                            <span class="icon is-small is-left">
+                                <i class="material-icons" title="Help">help</i>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="field-label has-text-left is-flex is-align-items-center p-2">
+                    <label class="label is-flex is-align-content-center"
+                        title="Remote Git Repository">
+                        Target Repository
+                        <a href="#" class="icon has-text-grey-lighter ml-2
+                        is-clickable is-flex is-align-content-center">
+                            <i class="material-icons" title="Help">info</i>
+                        </a>
+                    </label>
+                </div>
+                <div class="field-body">
+                    <div class="field has-addons">
+                        <p class="control is-expanded">
                             <input class="input" type="text" name="osgs_repo"
                                 value="{{ osgs_repo }}">
                         </p>
+                        <div class="control">
+                            <a class="button is-danger">
+                                <span class="icon">
+                                    <i class="material-icons" title="Cancel Edits">cancel</i>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="control">
+                            <a class="button is-success">
+                                <span class="icon mr-1">
+                                    <i class="material-icons" title="Submit Changes">check</i>
+                                </span>
+                                Submit
+                            </a>
+                        </div>
+                        <div class="control">
+                            <a class="button is-info">
+                                <span class="icon mr-1">
+                                    <i class="material-icons" title="Edit Field">edit</i>
+                                </span>
+                                Edit
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
