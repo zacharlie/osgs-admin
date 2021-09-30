@@ -26,7 +26,7 @@ def init_db(database_path):
     current_app.logger.warning("Attempting to reinitialize database")
 
     if not os.path.exists(database_path):  # ensure existing db cannot be overwritten
-        from .utils.sec import key_gen
+        from .utils.secutils import key_gen
 
         if os.environ.get("FLASK_ENV") == "development":
             credential = "admin"  # admin admin (development mode)

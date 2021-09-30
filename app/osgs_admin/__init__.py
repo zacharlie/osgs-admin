@@ -25,7 +25,7 @@ def create_app(test_config=None):
         # on reinstantiation of the app, and may be served better by a k8s secret or something.
         # At this point in time it seems reasonable to use a random key for user deploys,
         # but this needs to be consistent when using a load balancer or distributed deploy
-        from .utils.sec import key_gen
+        from .utils.secutils import key_gen
 
         # app.config["SECRET_KEY"] = key_gen(82)
         app.config["DATABASE_FILE"] = "db.sqlite"
