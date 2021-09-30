@@ -33,6 +33,13 @@ def get_commit_hash(repo):
     return repo.commit().hexsha
 
 
+def get_remote_info(repo):
+    remote = git.remote.Remote(repo, "origin")
+    remote_info = remote.fetch()[0]
+    remote_commit = remote_info.commit
+    return remote_commit.hexsha
+
+
 def get_repo_info(repo):
     heads = repo.heads
     branches = [branch for branch.name in heads]
