@@ -34,10 +34,16 @@ def get_commit_hash(repo):
 
 
 def get_remote_info(repo):
-    remote = git.remote.Remote(repo, "origin")
-    remote_info = remote.fetch()[0]
-    remote_commit = remote_info.commit
-    return remote_commit.hexsha
+    remote_ctx = git.remote.Remote(repo, "origin")
+    remote_repo = remote_ctx.fetch()[0]
+    heads = remote_repo.heads
+    branches = [branch for branch.name in heads]
+    remote_info = {
+        "commit": get_commit_hash(remote_repo),
+        "branch": remote_repo.active_branch.name,
+        "branches": branches,
+    }
+    return remote_info
 
 
 def get_repo_info(repo):
