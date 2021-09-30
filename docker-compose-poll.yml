@@ -7,9 +7,11 @@ services:
 
   flower:
     image: mher/flower
+    ports:
+      - 5555:5555
     environment:
-      - CELERY_BROKER_URL="${CELERY_BROKER_URL}"
-      - CELERY_RESULT_BACKEND="${CELERY_RESULT_BACKEND}"
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
     depends_on:
       - redis
     restart: always
@@ -24,20 +26,21 @@ services:
       dockerfile: dockerfile-flask
     environment:
       - FLASK_ENV="production"
-      - CELERY_BROKER_URL="${CELERY_BROKER_URL}"
-      - CELERY_RESULT_BACKEND="${CELERY_RESULT_BACKEND}"
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
     depends_on:
       - redis
     restart: always
     volumes:
       - "${FLASK_APP_SOURCE}:${FLASK_APP_TARGET}"
+      - //var/run/docker.sock:/var/run/docker.sock
 
   worker:
     image: webapp-flask
     command: celery -A osgs_admin.tasks.celery worker -l INFO
     environment:
-      - CELERY_BROKER_URL="${CELERY_BROKER_URL}"
-      - CELERY_RESULT_BACKEND="${CELERY_RESULT_BACKEND}"
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
     depends_on:
       - flask
     restart: always
@@ -51,6 +54,8 @@ services:
         TARGET: "${FLASK_APP_TARGET}"
       context: .
       dockerfile: dockerfile-watchdog-poll
+    depends_on:
+      - flask
     restart: always
     volumes:
       - "${FLASK_APP_SOURCE}:${FLASK_APP_TARGET}"

@@ -1,0 +1,103 @@
+{% extends "_base.html" %}
+
+{% block mainstyles %}
+<style>
+    .main-block {
+        margin-top: -3rem;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+    }
+    .menu-block {
+        max-height: 80vh;
+        overflow: auto;
+    }
+    .content-block {
+        max-height: 80vh;
+        overflow: auto;
+    }
+</style>
+
+{% block styles %}
+{% endblock %}
+
+{% endblock %}
+
+
+{% block main %}
+
+<section class="section main-block">
+    <div class="container content-block is-fullwidth has-text-centered">
+        <div class="column is-12">
+            <div class="columns">
+                <div class="column is-4 menu-block has-text-left">
+                    <aside class="menu">
+                        <p class="menu-label">
+                        General
+                        </p>
+                        <ul class="menu-list">
+                            <li><a>System</a></li>
+                            <li><a class="is-active">Setup</a>
+                                <ul>
+                                    <li><a>Routes</a></li>
+                                    <li><a>Repository</a></li>
+                                    <li><a>Operations</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="menu-label">
+                        Infrastructure
+                        </p>
+                        <ul class="menu-list">
+                            <li><a>Security</a></li>
+                            <li><a class="is-flex is-justify-content-space-between">
+                                Scalability
+                                <span class="is-expanded tag is-link is-light">Enterprise</span>
+                            </a></li>
+                            <li><a class="is-flex is-justify-content-space-between">
+                                Monitoring
+                                <span class="is-expanded tag is-link is-light">Enterprise</span>
+                            </a></li>
+                        </ul>
+                        <p class="menu-label">
+                        Applications
+                        </p>
+                        <ul class="menu-list">
+                            <li><a>Services</a></li>
+                            <li><a>APIs</a>
+                                <ul>
+                                    <li><a>OpenAPI</a></li>
+                                    <li><a>OGC APIs</a></li>
+                                    <li><a>OGC Services</a></li>
+                                    <li><a>Maptiles</a></li>
+                                </ul>
+                            </li>
+                            <li><a>Mapservers</a>
+                                <ul>
+                                    <li><a>QGIS Server</a></li>
+                                    <li><a>Geoserver</a></li>
+                                    <li><a>GeoNode</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="menu-label">
+                        Advanced
+                        </p>
+                        <ul class="menu-list">
+                            <li><a class="is-flex is-justify-content-space-between">
+                                Tasks
+                                <span class="is-expanded tag is-link is-light">Enterprise</span>
+                            </a></li>
+                        <li><a>Reset</a></li>
+                        <li><a>Backups</a></li>
+                        </ul>
+                    </aside>
+                </div>
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,7 +1,8 @@
-{% extends "_main.html" %}
+{% extends "_config.html" %}
 
 {% block content %}
-<div class="column is-8 is-offset-2">
+
+<div class="column is-8 content-block">
     <h3 class="title">System Configuration</h3>
     <div class="box">
         <p>{{request_active}}</p>
@@ -142,11 +143,5 @@
         </p>
     </div>
 </div>
-</div>
 
-            <button class="button is-block is-info is-medium is-fullwidth">Update</button>
-
-        </form>
-    </div>
-</div>
 {% endblock %}
