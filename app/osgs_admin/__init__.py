@@ -8,6 +8,7 @@ db = SQLAlchemy()
 
 def create_app(test_config=None):
     app = Flask(__name__)
+    app.url_map.strict_slashes = False
 
     app.config.from_mapping(
         # app secret should be overridden by instance config
@@ -26,7 +27,7 @@ def create_app(test_config=None):
         # but this needs to be consistent when using a load balancer or distributed deploy
         from .utils.sec import key_gen
 
-        app.config["SECRET_KEY"] = key_gen(82)
+        # app.config["SECRET_KEY"] = key_gen(82)
         app.config["DATABASE_FILE"] = "db.sqlite"
         # db path uses sqlite:/// for relative and sqlite://// for absolute
         app.config["SQLALCHEMY_DATABASE_URI"] = (

@@ -43,24 +43,6 @@ def page_dashboard():
     )
 
 
-@auth.route("/config")
-@login_required
-def page_config():
-    from .models import Osgs
-
-    osgs = Osgs.query.all()[0]
-
-    import json
-
-    osgs_repo = json.loads(osgs.config)["osgs_repo"]
-
-    return render_template(
-        "config.html",
-        osgs=osgs,
-        osgs_repo=osgs_repo,
-    )
-
-
 @auth.route("/users")
 @login_required
 def page_users():

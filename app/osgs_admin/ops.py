@@ -5,10 +5,28 @@ ops = Blueprint("ops", __name__)
 
 from .models import Osgs
 
-from .utils import hello_world, hello_sleepy_world
+
+@ops.route("/config")
+@login_required
+def page_config():
+
+    osgs = Osgs.query.all()[0]
+
+    import json
+
+    osgs_repo = json.loads(osgs.config)["osgs_repo"]
+
+    return render_template(
+        "config/index.html",
+        osgs=osgs,
+        osgs_repo=osgs_repo,
+    )
+
 
 ##################################################
 # Example Pages for dev purposes #
+
+from .utils import hello_world, hello_sleepy_world
 
 
 @ops.route("/examples/reactive")

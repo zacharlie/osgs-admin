@@ -8,13 +8,38 @@
         display: flex;
         align-items: center;
     }
+
     .menu-block {
         max-height: 80vh;
         overflow: auto;
     }
+
     .content-block {
         max-height: 80vh;
         overflow: auto;
+    }
+
+    .c-scroller-menu-simple {
+        scrollbar-gutter: stable;
+        scrollbar-width: thin;
+        scrollbar-color: #485FC7 white;
+    }
+
+    .c-scroller-menu-simple ::-webkit-scrollbar-track {
+        border: 2px solid white;
+        /* // border color does not support transparent on scrollbar */
+        /* // border-color: transparent; */
+        background-color: #a0a0a0;
+    }
+
+    .c-scroller-menu-simple ::-webkit-scrollbar {
+        width: 6px;
+        background-color: white;
+    }
+
+    .c-scroller-menu-simple ::-webkit-scrollbar-thumb {
+        background-color: #485FC7;
+        border-radius: 4px;
     }
 </style>
 
@@ -26,7 +51,7 @@
 
 {% block main %}
 
-<section class="section main-block">
+<section class="section main-block c-scroller-menu-simple">
     <div class="container content-block is-fullwidth has-text-centered">
         <div class="column is-12">
             <div class="columns">
@@ -36,13 +61,41 @@
                         General
                         </p>
                         <ul class="menu-list">
-                            <li><a>System</a></li>
-                            <li><a class="is-active">Setup</a>
+                            {% set config_section = request.args.get('section') %}
+                            {% if config_section %}
+                            {% set config_section_lower = config_section.lower() %}
+                            {% else %}
+                            {% set config_section_lower = None %}
+                            {% endif %}
+                            <li><a{% if request.path == "/config" and config_section_lower not in ["config","env","compose"] %} class="is-active"{% endif %} href="/config">System</a>
+                                {% if request.path == "/config" %}
                                 <ul>
-                                    <li><a>Routes</a></li>
-                                    <li><a>Repository</a></li>
-                                    <li><a>Operations</a></li>
+                                    <li><a{%if config_section_lower == "config" %} class="is-active"{% endif %}
+                                        href="/config?section=config"
+                                        >Configuration</a></li>
+                                    <li><a{%if config_section_lower == "env" %} class="is-active"{% endif %}
+                                        href="/config?section=env"
+                                        >Environment</a></li>
+                                    <li><a{%if config_section_lower == "compose" %} class="is-active"{% endif %}
+                                        href="/config?section=compose"
+                                        >Docker Compose</a></li>
                                 </ul>
+                                {% endif %}
+                            </li>
+                            <li><a{%if request.path == "/config/setup" and config_section_lower not in ["routes","repo","ops"] %} class="is-active"{% endif %} href="/config/setup">Setup</a>
+                                {% if request.path == "/config/setup" %}
+                                <ul>
+                                    <li><a{% if config_section_lower == "routes" %} class="is-active"{% endif %}
+                                        href="/config/setup?section=routes"
+                                        >Routes</a></li>
+                                    <li><a{% if config_section_lower == "repo" %} class="is-active"{% endif %}
+                                        href="/config/setup?section=repo"
+                                        >Repository</a></li>
+                                    <li><a{%if config_section_lower == "ops" %} class="is-active"{% endif %}
+                                        href="/config/setup?section=ops"
+                                        >Operations</a></li>
+                                </ul>
+                                {% endif %}
                             </li>
                         </ul>
                         <p class="menu-label">
@@ -52,11 +105,11 @@
                             <li><a>Security</a></li>
                             <li><a class="is-flex is-justify-content-space-between">
                                 Scalability
-                                <span class="is-expanded tag is-link is-light">Enterprise</span>
+                                <span class="is-expanded tag is-link is-light not-active">Enterprise</span>
                             </a></li>
                             <li><a class="is-flex is-justify-content-space-between">
                                 Monitoring
-                                <span class="is-expanded tag is-link is-light">Enterprise</span>
+                                <span class="is-expanded tag is-link is-light not-active">Enterprise</span>
                             </a></li>
                         </ul>
                         <p class="menu-label">
@@ -84,12 +137,24 @@
                         Advanced
                         </p>
                         <ul class="menu-list">
-                            <li><a class="is-flex is-justify-content-space-between">
+                            <li><a class="is-flex is-justify-content-space-between not-active">
                                 Tasks
                                 <span class="is-expanded tag is-link is-light">Enterprise</span>
                             </a></li>
-                        <li><a>Reset</a></li>
-                        <li><a>Backups</a></li>
+                            <li><a>Reset</a></li>
+                            <li><a>Backup</a>
+                                <ul>
+                                    <li><a>Export</a></li>
+                                    <li><a class="is-flex is-justify-content-space-between not-active">
+                                        Sync
+                                        <span class="is-expanded tag is-link is-light">Enterprise</span>
+                                    </a></li>
+                                    <li><a class="is-flex is-justify-content-space-between not-active">
+                                        Manage
+                                        <span class="is-expanded tag is-link is-light">Enterprise</span>
+                                    </a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </aside>
                 </div>
