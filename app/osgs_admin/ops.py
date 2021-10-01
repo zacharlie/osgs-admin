@@ -1,4 +1,4 @@
-from flask import Blueprint, g, render_template, flash, jsonify
+from flask import Blueprint, g, render_template, flash, jsonify, redirect
 from flask_login import login_required
 
 ops = Blueprint("ops", __name__)
@@ -20,6 +20,28 @@ def page_config():
     )
 
 
+@ops.route("/config/system")
+@ops.route("/config/system/config")
+@ops.route("/config/config")
+@login_required
+def redirect_config_system_config():
+    return redirect("/config?section=config", 301)
+
+
+@ops.route("/config/system/env")
+@ops.route("/config/env")
+@login_required
+def redirect_config_system_env():
+    return redirect("/config?section=config", 301)
+
+
+@ops.route("/config/system/compose")
+@ops.route("/config/compose")
+@login_required
+def redirect_config_system_compose():
+    return redirect("/config?section=compose", 301)
+
+
 @ops.route("/config/setup")
 @login_required
 def page_config_setup():
@@ -31,6 +53,24 @@ def page_config_setup():
         osgs=osgs,
         osgs_config=osgs_config,
     )
+
+
+@ops.route("/config/setup/routes")
+@login_required
+def redirect_config_setup_routes():
+    return redirect("/config/setup?section=routes", 301)
+
+
+@ops.route("/config/setup/repo")
+@login_required
+def redirect_config_setup_repo():
+    return redirect("/config/setup?section=repo", 301)
+
+
+@ops.route("/config/setup/ops")
+@login_required
+def redirect_config_setup_ops():
+    return redirect("/config/setup?section=ops", 301)
 
 
 @ops.route("/config/services")
@@ -72,6 +112,12 @@ def page_config_backup():
     )
 
 
+@ops.route("/config/backup/export")
+@login_required
+def redirect_config_backup_export():
+    return redirect("/config/backup?section=export", 301)
+
+
 @ops.route("/config/reset")
 @login_required
 def page_config_reset():
@@ -96,6 +142,24 @@ def page_config_security():
         osgs=osgs,
         osgs_config=osgs_config,
     )
+
+
+@ops.route("/config/security/ssl")
+@login_required
+def redirect_config_security_ssl():
+    return redirect("/config/security?section=ssl", 301)
+
+
+@ops.route("/config/security/ssh")
+@login_required
+def redirect_config_security_ssh():
+    return redirect("/config/security?section=ssh", 301)
+
+
+@ops.route("/config/security/oauth")
+@login_required
+def redirect_config_security_oauth():
+    return redirect("/config/security?section=oauth", 301)
 
 
 ##################################################

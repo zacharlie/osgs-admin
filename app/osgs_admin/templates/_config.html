@@ -1,5 +1,9 @@
 {% extends "_base.html" %}
 
+{% from 'components/_menu.html' import menu_item_pro_tag as pro_tag %}
+{% from 'components/_menu.html' import menu_item_link as menu_link %}
+{% from 'components/_menu.html' import menu_top_item_link as top_link %}
+
 {% block mainstyles %}
 <style>
     .main-block {
@@ -44,37 +48,43 @@
                         General
                         </p>
                         <ul class="menu-list">
-                            <li><a{% if request.path == "/config" and
+                            <li><a{% if request.path.rstrip("/") == "/config" and
                                 config_section_lower not in ["config","env","compose"] %} class="is-active"
                                 {% endif %} href="/config">System</a>
-                                {% if request.path == "/config" %}
+                                {% if request.path.rstrip("/") == "/config" %}
                                 <ul>
-                                    <li><a{%if config_section_lower == "config" %} class="is-active"{% endif %}
-                                        href="/config?section=config"
-                                        >Configuration</a></li>
-                                    <li><a{%if config_section_lower == "env" %} class="is-active"{% endif %}
-                                        href="/config?section=env"
-                                        >Environment</a></li>
-                                    <li><a{%if config_section_lower == "compose" %} class="is-active"{% endif %}
-                                        href="/config?section=compose"
-                                        >Docker Compose</a></li>
+                                    <li>
+                                        {{ menu_link(target="config", section=config_section_lower,
+                                        label="Configuration", ref="/config?section=config") }}
+                                    </li>
+                                    <li>
+                                        {{ menu_link(target="env", section=config_section_lower,
+                                        label="Environment", ref="/config?section=env") }}
+                                    </li>
+                                    <li>
+                                        {{ menu_link(target="compose", section=config_section_lower,
+                                        label="Docker Compose", ref="/config?section=compose") }}
+                                    </li>
                                 </ul>
                                 {% endif %}
                             </li>
-                            <li><a{%if request.path == "/config/setup" and
+                            <li><a{%if request.path.rstrip("/") == "/config/setup" and
                                 config_section_lower not in ["routes","repo","ops"] %} class="is-active"
                                 {% endif %} href="/config/setup">Setup</a>
-                                {% if request.path == "/config/setup" %}
+                                {% if request.path.rstrip("/") == "/config/setup" %}
                                 <ul>
-                                    <li><a{% if config_section_lower == "routes" %} class="is-active"{% endif %}
-                                        href="/config/setup?section=routes"
-                                        >Routes</a></li>
-                                    <li><a{% if config_section_lower == "repo" %} class="is-active"{% endif %}
-                                        href="/config/setup?section=repo"
-                                        >Repository</a></li>
-                                    <li><a{%if config_section_lower == "ops" %} class="is-active"{% endif %}
-                                        href="/config/setup?section=ops"
-                                        >Operations</a></li>
+                                    <li>
+                                        {{ menu_link(target="routes", section=config_section_lower,
+                                        label="Routes", ref="/config/setup?section=routes") }}
+                                    </li>
+                                    <li>
+                                        {{ menu_link(target="repo", section=config_section_lower,
+                                        label="Repository", ref="/config/setup?section=repo") }}
+                                    </li>
+                                    <li>
+                                        {{ menu_link(target="ops", section=config_section_lower,
+                                        label="Operations", ref="/config/setup?section=ops") }}
+                                    </li>
                                 </ul>
                                 {% endif %}
                             </li>
@@ -83,86 +93,55 @@
                         Infrastructure
                         </p>
                         <ul class="menu-list">
-                            <li><a{% if request.path == "/config/security" and
+                            <li><a{% if request.path.rstrip("/") == "/config/security" and
                                 config_section_lower not in ["ssl","ssh","oauth","sso","vault"] %} class="is-active"
                                 {% endif %} href="/config/security">Security</a>
-                                {% if request.path == "/config/security" %}
+                                {% if request.path.rstrip("/") == "/config/security" %}
                                 <ul>
-                                    <li><a{%if config_section_lower == "ssl" %} class="is-active"{% endif %}
-                                        href="/config/security?section=ssl"
-                                        >SSL</a></li>
-                                    <li><a{%if config_section_lower == "ssh" %} class="is-active"{% endif %}
-                                        href="/config/security?section=ssh"
-                                        >SSH</a></li>
-                                    <li><a{%if config_section_lower == "oauth" %} class="is-active"{% endif %}
-                                        href="/config/security?section=oauth"
-                                        >OAuth</a></li>
-                                    <li><a{%if config_section_lower == "sso" %} class="is-active"{% endif %}
-                                        href="/config/security?section=sso"
-                                        class="is-flex is-justify-content-space-between not-active"
-                                        >SSO
-                                        <div class="tags has-addons">
-                                            <span class="tag is-link is-light is-rounded"><i class="material-icons" title="Enterprise Feature">star</i></span>
-                                            <span class="tag is-link is-rounded">Pro</span>
-                                        </div>
-                                        </a></li>
-                                    <li><a{%if config_section_lower == "vault" %} class="is-active"{% endif %}
-                                        href="/config/security?section=vault"
-                                        class="is-flex is-justify-content-space-between not-active"
-                                        >Vault
-                                        <span class="tag is-link is-light is-rounded">Pro</span>
-                                        </a></li>
+                                    <li>
+                                        {{ menu_link(target="ssl", section=config_section_lower,
+                                        label="SSL", ref="/config/security?section=ssl") }}
+                                    </li>
+                                    <li>
+                                        {{ menu_link(target="ssh", section=config_section_lower,
+                                        label="SSH", ref="/config/security?section=ssh") }}
+                                    </li>
+                                    <li>
+                                        {{ menu_link(target="oauth", section=config_section_lower,
+                                        label="OAuth", ref="/config/security?section=oauth") }}
+                                    </li>
+                                    <li>{{ pro_tag(target="sso", label="SSO", ref="/config/security?section=sso") }}</li>
+                                    <li>{{ pro_tag(target="vault", label="Vault", ref="/config/security?section=vault") }}</li>
                                 </ul>
                                 {% endif %}
                             </li>
-                            <li><a class="is-flex is-justify-content-space-between">
-                                Scalability
-                                <span class="tag is-link is-light not-active">Enterprise</span>
-                            </a></li>
-                            <li><a class="is-flex is-justify-content-space-between">
-                                Monitoring
-                                <span class="tag is-link is-light not-active">Enterprise</span>
-                            </a></li>
+                            <li>{{ pro_tag(target="scale", label="Scalability", ref="/config/scale") }}</li>
+                            <li>{{ pro_tag(target="monitor", label="Monitoring", ref="/config/monitor") }}</li>
                         </ul>
                         <p class="menu-label">
                         Applications
                         </p>
                         <ul class="menu-list">
-                            <li><a{% if request.path == "/config/services" %} class="is-active"
-                                {% endif %} href="/config/services">Services</a></li>
-                            <li><a{% if request.path == "/config/apis" %} class="is-active"
-                                {% endif %} href="/config/apis">APIs</a></li>
+                            <li>{{ top_link(label="Services", ref="/config/services") }}</li>
+                            <li>{{ top_link(label="APIs", ref="/config/apis") }}</li>
                         </ul>
                         <p class="menu-label">
                         Advanced
                         </p>
                         <ul class="menu-list">
-                            <li><a class="is-flex is-justify-content-space-between not-active">
-                                Tasks
-                                <span class="tag is-link is-light">Enterprise</span>
-                            </a></li>
-                            <li><a{% if request.path == "/config/reset" %} class="is-active"
-                                {% endif %} href="/config/reset">Reset</a></li>
-                            <li><a{% if request.path == "/config/backup" and
+                            <li><li>{{ pro_tag(target="tasks", label="Tasks", ref="/config/tasks") }}</li></li>
+                            <li><li>{{ top_link(label="Reset", ref="/config/reset") }}</li></li>
+                            <li><a{% if request.path.rstrip("/") == "/config/backup" and
                                 config_section_lower not in ["export","sync","manage"] %} class="is-active"
                                 {% endif %} href="/config/backup">Backup</a>
-                                {% if request.path == "/config/backup" %}
+                                {% if request.path.rstrip("/") == "/config/backup" %}
                                 <ul>
-                                    <li><a{%if config_section_lower == "export" %} class="is-active"{% endif %}
-                                        href="/config/backup?section=export"
-                                        >Export</a></li>
-                                    <li><a{%if config_section_lower == "sync" %} class="is-active"{% endif %}
-                                        href="/config/backup?section=sync"
-                                        class="is-flex is-justify-content-space-between not-active"
-                                        >Sync
-                                        <span class="tag is-link is-light is-rounded">Pro</span>
-                                        </a></li>
-                                    <li><a{%if config_section_lower == "manage" %} class="is-active"{% endif %}
-                                        href="/config/backup?section=manage"
-                                        class="is-flex is-justify-content-space-between not-active"
-                                        >Manage
-                                        <span class="tag is-link is-light is-rounded">Pro</span>
-                                        </a></li>
+                                    <li>
+                                        {{ menu_link(target="export", section=config_section_lower,
+                                        label="Export", ref="/config/backup?section=export") }}
+                                    </li>
+                                    <li>{{ pro_tag(target="sync", label="Sync", ref="/config/backup?section=sync") }}</li>
+                                    <li>{{ pro_tag(target="manage", label="Manage", ref="/config/backup?section=manage") }}</li>
                                 </ul>
                                 {% endif %}
                             </li>

@@ -1,5 +1,9 @@
 {% extends "_base.html" %}
 
+{% from 'components/_menu.html' import menu_item_pro_tag as pro_tag %}
+{% from 'components/_menu.html' import menu_item_link as menu_link %}
+{% from 'components/_menu.html' import menu_top_item_link as top_link %}
+
 {% block mainstyles %}
 <style>
     .main-block {
@@ -51,7 +55,7 @@
 
 {% block main %}
 
-<section class="section main-block c-scroller-menu-simple">
+<div class="main-block c-scroller-menu-simple">
     <div class="container content-block is-fullwidth has-text-centered">
         <div class="column is-12">
             <h5 class="title is-5 has-text-left">Welcome{% if firstname %}, {{ firstname }}{% endif %}{% if lastname %} {{ lastname }}{% endif %}!</h3>
@@ -73,15 +77,18 @@
                                 {% endif %} href="/dashboard">System</a>
                                 {% if request.path == "/dashboard" %}
                                 <ul>
-                                    <li><a{%if config_section_lower == "services" %} class="is-active"{% endif %}
-                                        href="/dashboard?section=services"
-                                        >Services</a></li>
-                                    <li><a{%if config_section_lower == "resources" %} class="is-active"{% endif %}
-                                        href="/dashboard?section=resources"
-                                        >Resources</a></li>
-                                    <li><a{%if config_section_lower == "status" %} class="is-active"{% endif %}
-                                        href="/dashboard?section=status"
-                                        >Status</a></li>
+                                    <li>
+                                        {{ menu_link(target="services", section=config_section_lower,
+                                        label="Services", ref="/dashboard?section=services") }}
+                                    </li>
+                                    <li>
+                                        {{ menu_link(target="resources", section=config_section_lower,
+                                        label="Resources", ref="/dashboard?section=resources") }}
+                                    </li>
+                                    <li>
+                                        {{ menu_link(target="status", section=config_section_lower,
+                                        label="Status", ref="/dashboard?section=status") }}
+                                    </li>
                                 </ul>
                                 {% endif %}
                             </li>
@@ -90,15 +97,18 @@
                                 {% endif %} href="/dashboard/docker">Docker</a>
                                 {% if request.path == "/dashboard/docker" %}
                                 <ul>
-                                    <li><a{%if config_section_lower == "containers" %} class="is-active"{% endif %}
-                                        href="/dashboard/docker?section=containers"
-                                        >Services</a></li>
-                                    <li><a{%if config_section_lower == "compose" %} class="is-active"{% endif %}
-                                        href="/dashboard/docker?section=compose"
-                                        >Resources</a></li>
-                                    <li><a{%if config_section_lower == "networks" %} class="is-active"{% endif %}
-                                        href="/dashboard/docker?section=networks"
-                                        >Status</a></li>
+                                    <li>
+                                        {{ menu_link(target="containers", section=config_section_lower,
+                                        label="Containers", ref="/dashboard/docker?section=containers") }}
+                                    </li>
+                                    <li>
+                                        {{ menu_link(target="compose", section=config_section_lower,
+                                        label="Compose", ref="/dashboard/docker?section=compose") }}
+                                    </li>
+                                    <li>
+                                        {{ menu_link(target="networks", section=config_section_lower,
+                                        label="Networks", ref="/dashboard/docker?section=networks") }}
+                                    </li>
                                 </ul>
                                 {% endif %}
                             </li>
@@ -107,15 +117,18 @@
                                 {% endif %} href="/dashboard/osgs">OSGS</a>
                                 {% if request.path == "/dashboard/osgs" %}
                                 <ul>
-                                    <li><a{%if config_section_lower == "services" %} class="is-active"{% endif %}
-                                        href="/dashboard/osgs?section=services"
-                                        >Services</a></li>
-                                    <li><a{%if config_section_lower == "traffic" %} class="is-active"{% endif %}
-                                        href="/dashboard/osgs?section=traffic"
-                                        >Resources</a></li>
-                                    <li><a{%if config_section_lower == "status" %} class="is-active"{% endif %}
-                                        href="/dashboard/osgs?section=status"
-                                        >Status</a></li>
+                                    <li>
+                                        {{ menu_link(target="services", section=config_section_lower,
+                                        label="Services", ref="/dashboard/osgs?section=services") }}
+                                    </li>
+                                    <li>
+                                        {{ menu_link(target="traffic", section=config_section_lower,
+                                        label="Traffic", ref="/dashboard/osgs?section=traffic") }}
+                                    </li>
+                                    <li>
+                                        {{ menu_link(target="status", section=config_section_lower,
+                                        label="Status", ref="/dashboard/osgs?section=status") }}
+                                    </li>
                                 </ul>
                                 {% endif %}
                             </li>
@@ -127,6 +140,6 @@
             </div>
         </div>
     </div>
-</section>
+</div>
 
 {% endblock %}

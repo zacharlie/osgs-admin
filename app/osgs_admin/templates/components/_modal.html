@@ -22,6 +22,7 @@
   <div class="modal-overlay" x-show="{{ operation }}" x-cloak></div>
 {%- endmacro -%}
 
+
 {%- macro help(target, classes='is-info', name='Information', content='') -%}
 {% set operation = [target|replace(" ","")|lower,'IsOpen']|join %}
 <div x-data="{ {{ operation }}: false }" x-on:keydown.escape="{{ operation }} = false">
