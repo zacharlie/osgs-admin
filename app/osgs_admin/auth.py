@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user, login_required
 from .models import User
 from . import db
 
@@ -30,17 +30,7 @@ def form_login_post():
 
     # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=remember)
-    return redirect(url_for("auth.page_dashboard"))
-
-
-@auth.route("/dashboard")
-@login_required
-def page_dashboard():
-    return render_template(
-        "dashboard.html",
-        firstname=current_user.firstname,
-        lastname=current_user.lastname,
-    )
+    return redirect(url_for("main.page_dashboard"))
 
 
 @auth.route("/users")

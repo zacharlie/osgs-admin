@@ -63,3 +63,28 @@ html {
   opacity: 0.75;
   z-index: 9;
 }
+
+/* custom scroller */
+
+.c-scroller-menu-simple {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #485fc7 white;
+}
+
+.c-scroller-menu-simple ::-webkit-scrollbar-track {
+  border: 2px solid white;
+  /* // border color does not support transparent on scrollbar */
+  /* // border-color: transparent; */
+  background-color: #a0a0a0;
+}
+
+.c-scroller-menu-simple ::-webkit-scrollbar {
+  width: 6px;
+  background-color: white;
+}
+
+.c-scroller-menu-simple ::-webkit-scrollbar-thumb {
+  background-color: #485fc7;
+  border-radius: 4px;
+}

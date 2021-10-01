@@ -1,0 +1,132 @@
+{% extends "_base.html" %}
+
+{% block mainstyles %}
+<style>
+    .main-block {
+        margin-top: -3rem;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .menu-block {
+        max-height: 80vh;
+        overflow: auto;
+    }
+
+    .content-block {
+        max-height: 80vh;
+        overflow: auto;
+    }
+
+    .c-scroller-menu-simple {
+        scrollbar-gutter: stable;
+        scrollbar-width: thin;
+        scrollbar-color: #485FC7 white;
+    }
+
+    .c-scroller-menu-simple ::-webkit-scrollbar-track {
+        border: 2px solid white;
+        /* // border color does not support transparent on scrollbar */
+        /* // border-color: transparent; */
+        background-color: #a0a0a0;
+    }
+
+    .c-scroller-menu-simple ::-webkit-scrollbar {
+        width: 6px;
+        background-color: white;
+    }
+
+    .c-scroller-menu-simple ::-webkit-scrollbar-thumb {
+        background-color: #485FC7;
+        border-radius: 4px;
+    }
+</style>
+
+{% block styles %}
+{% endblock %}
+
+{% endblock %}
+
+
+{% block main %}
+
+<section class="section main-block c-scroller-menu-simple">
+    <div class="container content-block is-fullwidth has-text-centered">
+        <div class="column is-12">
+            <h5 class="title is-5 has-text-left">Welcome{% if firstname %}, {{ firstname }}{% endif %}{% if lastname %} {{ lastname }}{% endif %}!</h3>
+            <div class="columns">
+                <div class="column is-4 menu-block has-text-left">
+                    {% set config_section = request.args.get('section') %}
+                    {% if config_section %}
+                    {% set config_section_lower = config_section.lower() %}
+                    {% else %}
+                    {% set config_section_lower = None %}
+                    {% endif %}
+                    <aside class="menu">
+                        <p class="menu-label">
+                        General
+                        </p>
+                        <ul class="menu-list">
+                            <li><a{% if request.path == "/dashboard" and
+                                config_section_lower not in ["services","resources","status"] %} class="is-active"
+                                {% endif %} href="/dashboard">System</a>
+                                {% if request.path == "/dashboard" %}
+                                <ul>
+                                    <li><a{%if config_section_lower == "services" %} class="is-active"{% endif %}
+                                        href="/dashboard?section=services"
+                                        >Services</a></li>
+                                    <li><a{%if config_section_lower == "resources" %} class="is-active"{% endif %}
+                                        href="/dashboard?section=resources"
+                                        >Resources</a></li>
+                                    <li><a{%if config_section_lower == "status" %} class="is-active"{% endif %}
+                                        href="/dashboard?section=status"
+                                        >Status</a></li>
+                                </ul>
+                                {% endif %}
+                            </li>
+                            <li><a{% if request.path == "/dashboard/docker" and
+                                config_section_lower not in ["containers","compose","networks"] %} class="is-active"
+                                {% endif %} href="/dashboard/docker">Docker</a>
+                                {% if request.path == "/dashboard/docker" %}
+                                <ul>
+                                    <li><a{%if config_section_lower == "containers" %} class="is-active"{% endif %}
+                                        href="/dashboard/docker?section=containers"
+                                        >Services</a></li>
+                                    <li><a{%if config_section_lower == "compose" %} class="is-active"{% endif %}
+                                        href="/dashboard/docker?section=compose"
+                                        >Resources</a></li>
+                                    <li><a{%if config_section_lower == "networks" %} class="is-active"{% endif %}
+                                        href="/dashboard/docker?section=networks"
+                                        >Status</a></li>
+                                </ul>
+                                {% endif %}
+                            </li>
+                            <li><a{% if request.path == "/dashboard/osgs" and
+                                config_section_lower not in ["services","traffic","status"] %} class="is-active"
+                                {% endif %} href="/dashboard/osgs">OSGS</a>
+                                {% if request.path == "/dashboard/osgs" %}
+                                <ul>
+                                    <li><a{%if config_section_lower == "services" %} class="is-active"{% endif %}
+                                        href="/dashboard/osgs?section=services"
+                                        >Services</a></li>
+                                    <li><a{%if config_section_lower == "traffic" %} class="is-active"{% endif %}
+                                        href="/dashboard/osgs?section=traffic"
+                                        >Resources</a></li>
+                                    <li><a{%if config_section_lower == "status" %} class="is-active"{% endif %}
+                                        href="/dashboard/osgs?section=status"
+                                        >Status</a></li>
+                                </ul>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

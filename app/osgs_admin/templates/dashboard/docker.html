@@ -1,0 +1,75 @@
+{% extends "_dash.html" %}
+
+{% block content %}
+
+<div class="column is-8 content-block">
+    {% set config_section = request.args.get('section') %}
+    {% if config_section %}
+    {% set config_section_lower = config_section.lower() %}
+    {% else %}
+    {% set config_section_lower = None %}
+    {% endif %}
+    {% if config_section_lower == "config" %}
+    <h3 class="title">System Configuration</h3>
+    {% elif config_section_lower == "env" %}
+    <h3 class="title">Environment Configuration</h3>
+    {% elif config_section_lower == "compose" %}
+    <h3 class="title">Docker Compose</h3>
+    {% else %}
+    <h3 class="title">System Information</h3>
+    {% endif %}
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="notification is-info">
+            {{ messages[0] }}.
+        </div>
+        {% endif %}
+        {% endwith %}
+        <canvas id="testChart" width="200" height="200"></canvas>
+        <form method="POST">
+          <button class="button is-block is-info is-medium is-fullwidth">SUBMIT</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+  var ctx = document.getElementById('testChart').getContext('2d')
+  const labels = ['One','Two','Three']
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Dataset 1',
+        data: [4,36,73],
+        borderColor: "rgba(255,0,0,1)",
+        backgroundColor: "rgba(255,0,0,0.5)",
+      },
+      {
+        label: 'Dataset 2',
+        data: [9,8,7],
+        borderColor: "rgba(0,0,255,1)",
+        backgroundColor: "rgba(0,0,255,0.5)",
+      }
+    ]
+  }
+
+  const testChart = new Chart(ctx, {
+    type: 'radar',
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Radar Chart'
+        }
+      }
+      }
+  });
+
+</script>
+
+
+{% endblock %}
