@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required
 from os import path, environ
 
-from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.schedulers.background import BackgroundScheduler
 
 db = SQLAlchemy()
 
@@ -108,22 +108,22 @@ def create_app(test_config=None):
         g.site_logo = "/static/osgs.svg"
         return dict(site_logo=g.site_logo)
 
-    from multiprocessing import Value
+    # from multiprocessing import Value
 
-    counter = Value("i", 0)
+    # counter = Value("i", 0)
 
-    @app.context_processor
-    def count_incrementer(counter=counter):
-        """Function for test purposes."""
-        with app.app_context():
-            with counter.get_lock():
-                counter.value += 1
-                app.logger.warning(f"CounterValue: {counter.value}")
-                return dict(counter=counter.value)
+    # @app.context_processor
+    # def count_incrementer(counter=counter):
+    #     """Function for test purposes."""
+    #     with app.app_context():
+    #         with counter.get_lock():
+    #             counter.value += 1
+    #             app.logger.warning(f"CounterValue: {counter.value}")
+    #             return dict(counter=counter.value)
 
-    scheduler = BackgroundScheduler(daemon=True)
-    scheduler.add_job(count_incrementer, "interval", [counter], seconds=5)
-    scheduler.start()
+    # scheduler = BackgroundScheduler(daemon=True)
+    # scheduler.add_job(count_incrementer, "interval", [counter], seconds=5)
+    # scheduler.start()
 
     # Error codes
 
