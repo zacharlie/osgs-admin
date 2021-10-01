@@ -3,21 +3,7 @@
 {% block content %}
 
 <div class="column is-8 content-block">
-    {% set config_section = request.args.get('section') %}
-    {% if config_section %}
-    {% set config_section_lower = config_section.lower() %}
-    {% else %}
-    {% set config_section_lower = None %}
-    {% endif %}
-    {% if config_section_lower == "config" %}
-    <h3 class="title">System Configuration</h3>
-    {% elif config_section_lower == "env" %}
-    <h3 class="title">Environment Configuration</h3>
-    {% elif config_section_lower == "compose" %}
-    <h3 class="title">Docker Compose</h3>
-    {% else %}
-    <h3 class="title">System Information</h3>
-    {% endif %}
+    <h3 class="title">System Setup</h3>
     <div class="box">
         <p>{{request_active}}</p>
         <p>{{g.request_active}}</p>

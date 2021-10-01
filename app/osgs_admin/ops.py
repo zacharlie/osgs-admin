@@ -4,22 +4,97 @@ from flask_login import login_required
 ops = Blueprint("ops", __name__)
 
 from .models import Osgs
+import json
 
 
 @ops.route("/config")
 @login_required
 def page_config():
-
     osgs = Osgs.query.all()[0]
-
-    import json
-
-    osgs_repo = json.loads(osgs.config)["osgs_repo"]
+    osgs_config = json.loads(osgs.config)
 
     return render_template(
         "config/index.html",
         osgs=osgs,
-        osgs_repo=osgs_repo,
+        osgs_config=osgs_config,
+    )
+
+
+@ops.route("/config/setup")
+@login_required
+def page_config_setup():
+    osgs = Osgs.query.all()[0]
+    osgs_config = json.loads(osgs.config)
+
+    return render_template(
+        "config/setup.html",
+        osgs=osgs,
+        osgs_config=osgs_config,
+    )
+
+
+@ops.route("/config/services")
+@login_required
+def page_config_services():
+    osgs = Osgs.query.all()[0]
+    osgs_config = json.loads(osgs.config)
+
+    return render_template(
+        "config/services.html",
+        osgs=osgs,
+        osgs_config=osgs_config,
+    )
+
+
+@ops.route("/config/apis")
+@login_required
+def page_config_apis():
+    osgs = Osgs.query.all()[0]
+    osgs_config = json.loads(osgs.config)
+
+    return render_template(
+        "config/apis.html",
+        osgs=osgs,
+        osgs_config=osgs_config,
+    )
+
+
+@ops.route("/config/backup")
+@login_required
+def page_config_backup():
+    osgs = Osgs.query.all()[0]
+    osgs_config = json.loads(osgs.config)
+
+    return render_template(
+        "config/backup.html",
+        osgs=osgs,
+        osgs_config=osgs_config,
+    )
+
+
+@ops.route("/config/reset")
+@login_required
+def page_config_reset():
+    osgs = Osgs.query.all()[0]
+    osgs_config = json.loads(osgs.config)
+
+    return render_template(
+        "config/reset.html",
+        osgs=osgs,
+        osgs_config=osgs_config,
+    )
+
+
+@ops.route("/config/security")
+@login_required
+def page_config_security():
+    osgs = Osgs.query.all()[0]
+    osgs_config = json.loads(osgs.config)
+
+    return render_template(
+        "config/security.html",
+        osgs=osgs,
+        osgs_config=osgs_config,
     )
 
 
