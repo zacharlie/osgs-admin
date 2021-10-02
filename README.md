@@ -16,7 +16,11 @@ It does this by mounting the hosts docker socket as `//var/run/docker.sock:/var/
 
 In addition, the application uses the python subprocessing module to execute shell commands (within the container) for stack configuration purposes.
 
+Over and above that, there are API endpoints for information services such as CPU and RAM utilisation of the host, which is an additional concern.
+
 > **TL;DR** Do not publish this admin interface or it's host port as a public facing web application. Only access it via local network, VPN, or similarly isolated environment.
+
+We'll look into locking it all down via built in wireguard or sshuttle when we get the chance.
 
 ## Platform
 

@@ -162,6 +162,14 @@ def redirect_config_security_oauth():
     return redirect("/config/security?section=oauth", 301)
 
 
+@ops.route("/system/resources/usage", methods=["GET"])
+def rest_system_resource_usage():
+    from .utils.sysutils import get_sys_stats
+
+    system_stats = get_sys_stats()
+    return jsonify(system_stats)
+
+
 ##################################################
 # Example Pages for dev purposes #
 
