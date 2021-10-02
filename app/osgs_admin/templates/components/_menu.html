@@ -12,18 +12,21 @@
 This feature is reserved for enterprise users.
 <br>
 <br>
+Note that this may not yet be available and could still be under development.
+<br>
+<br>
 For more information, please contact <a href="mailto:info@kartoza.com">info@kartoza.com</a>.
 ') -%}
 {% set operation = [target|replace(" ","")|lower,'IsOpen']|join %}
 <!-- Ref is not used in this component, but are kept for posterity  -->
 <div x-data="{ {{ operation }}: false }" x-on:keydown.escape="{{ operation }} = false">
     <a  x-on:click="{{ operation }} = true"
-    {%if config_section_lower == "{{ target }}" %} class="is-active"{% endif %}
-    class="is-flex is-justify-content-space-between not-active"
-    >{{ label }}
-    <span class="tag is-link is-light is-rounded">
-      <i class="material-icons pt-6 pb-6" title="Enterprise Feature">star</i>
-    </span>
+      {%if config_section_lower == "{{ target }}" %} class="is-active"{% endif %}
+      class="is-flex is-justify-content-space-between not-active"
+      >{{ label }}
+      <span class="tag is-link is-light is-rounded">
+        <i class="material-icons pt-6 pb-6" title="Enterprise Feature">star</i>
+      </span>
     </a>
     <div
     class="modal is-8 is-offset-2"
@@ -34,13 +37,14 @@ For more information, please contact <a href="mailto:info@kartoza.com">info@kart
     x-cloak
     x-transition
     >
-    <div class="modal-inner message {{ classes }}">
-      <div class="modal-header message-header">
-        <p>{{ name }}</p>
-        <button class="delete is-large" aria-label="delete" x-on:click="{{ operation }} = false"></button>
+      <div class="modal-inner message {{ classes }}">
+        <div class="modal-header message-header">
+          <p>{{ name }}</p>
+          <button class="delete is-large" aria-label="delete" x-on:click="{{ operation }} = false"></button>
+        </div>
+        <p class="modal-content content message-body has-text-centered">{{ content|safe }}</p>
       </div>
-      <p class="modal-content content message-body has-text-centered">{{ content|safe }}</p>
     </div>
-  </div>
   <div class="modal-overlay" x-show="{{ operation }}" x-cloak></div>
+</div>
 {%- endmacro -%}

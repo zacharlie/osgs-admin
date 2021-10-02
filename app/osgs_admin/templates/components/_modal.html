@@ -11,15 +11,16 @@
     x-cloak
     x-transition
     >
-    <div class="modal-inner message {{ classes }}">
-      <div class="modal-header message-header">
-        <p>{{ name }}</p>
-        <button class="delete is-large" aria-label="delete" x-on:click="{{ operation }} = false"></button>
+      <div class="modal-inner message {{ classes }}">
+        <div class="modal-header message-header">
+          <p>{{ name }}</p>
+          <button class="delete is-large" aria-label="delete" x-on:click="{{ operation }} = false"></button>
+        </div>
+        <p class="modal-content content message-body">{{ content|safe }}</p>
       </div>
-      <p class="modal-content content message-body">{{ content|safe }}</p>
-    </div>
   </div>
   <div class="modal-overlay" x-show="{{ operation }}" x-cloak></div>
+</div>
 {%- endmacro -%}
 
 
@@ -38,13 +39,14 @@
     x-cloak
     x-transition
     >
-    <div class="modal-inner message {{ classes }}">
-      <div class="modal-header message-header">
-        <p>{{ name }}</p>
-        <button class="delete is-large" aria-label="delete" x-on:click="{{ operation }} = false"></button>
+      <div class="modal-inner message {{ classes }}">
+        <div class="modal-header message-header">
+          <p>{{ name }}</p>
+          <button class="delete is-large" aria-label="delete" x-on:click="{{ operation }} = false"></button>
+        </div>
+        <p class="modal-content content message-body">{{ content|safe }}</p>
       </div>
-      <p class="modal-content content message-body">{{ content|safe }}</p>
-    </div>
   </div>
   <div class="modal-overlay" x-show="{{ operation }}" x-cloak></div>
+</div>
 {%- endmacro -%}

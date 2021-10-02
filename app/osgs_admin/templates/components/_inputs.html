@@ -1,0 +1,74 @@
+{%- macro form_input_field(target, fid=target, label=fid, value='', content='') -%}
+{% set fid = [fid|replace("/","")|replace(" ","_")|lower]|join %}
+{% set operation = [fid|replace(" ","")|lower,'IsOpen']|join %}
+{% set editing = [fid|replace(" ","")|lower,'IsEditing']|join %}
+<form x-cloak method="POST" id="{{ fid }}" action="{{ target }}">
+    <div x-data="{ {{ operation }}: false, {{ editing }}: false, fieldvalue: '{{ value }}' }"
+    x-on:keydown.escape="{{ operation }} = false">
+        <div class="field">
+            <div class="field-label has-text-left is-flex is-align-items-center p-2">
+                <label class="label is-flex is-align-content-center"
+                    title="{{ label }}">
+                    {{ label }}
+                    <a x-on:click="{{ operation }} = true"
+                    class="icon has-text-grey-lighter ml-2
+                    is-clickable is-flex is-align-content-center">
+                        <i class="material-icons" title="Help">info</i>
+                    </a>
+                </label>
+            </div>
+            <div class="field-body">
+                <div class="field has-addons">
+                    <p class="control is-expanded">
+                        <input class="input" type="text" name="{{ target }}"
+                        x-bind:readonly=!{{ editing }} x-model="fieldvalue">
+                    </p>
+                    <div class="control" x-show="{{ editing }}">
+                        <a class="button is-danger is-light" aria-label="cancel"
+                            x-on:click="{{ editing }} = !{{ editing }}, fieldvalue = '{{ value }}'">
+                            <span class="icon">
+                                <i class="material-icons" title="Cancel Edits">cancel</i>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="control" x-show="{{ editing }}">
+                        <button class="button is-success" aria-label="submit">
+                            <span class="icon mr-1">
+                                <i class="material-icons" title="Submit Changes">check</i>
+                            </span>
+                            Submit
+                        </button>
+                    </div>
+                    <div class="control" x-show="!{{ editing }}" >
+                        <a class="button is-info" aria-label="delete"
+                        x-on:click="{{ editing }} = !{{ editing }}">
+                            <span class="icon mr-1">
+                                <i class="material-icons" title="Edit Field">edit</i>
+                            </span>
+                            Edit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+        class="modal is-8 is-offset-2"
+        role="dialog"
+        tabindex="-1"
+        x-show="{{ operation }}"
+        x-on:click.away="{{ operation }} = false"
+        x-cloak
+        x-transition
+        >
+            <div class="modal-inner message is-info">
+            <div class="modal-header message-header">
+                <p>{{ label }}</p>
+                <button type="button" class="delete is-large" aria-label="delete" x-on:click="{{ operation }} = false"></button>
+            </div>
+            <p class="modal-content content message-body has-text-centered">{{ content|safe }}</p>
+            </div>
+        </div>
+        <div class="modal-overlay" x-show="{{ operation }}" x-cloak></div>
+    </div>
+</form>
+{%- endmacro -%}

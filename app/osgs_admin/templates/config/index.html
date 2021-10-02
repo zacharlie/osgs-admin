@@ -1,5 +1,7 @@
 {% extends "_config.html" %}
 
+{% from 'components/_inputs.html' import form_input_field %}
+
 {% block content %}
 
 <div class="column is-8 content-block">
@@ -75,6 +77,21 @@
                     </div>
                 </div>
             </div>
+
+            {{ form_input_field(target='osgs_repo', fid='osgs_repo', label='Target Repository',
+                                value=osgs_config["osgs_repo"], content='
+                                This field specifies the remote target address
+                                <br>for the OSGS parent git repository which
+                                <br>is used to initialize the stack.
+                                <br><br>
+                                The address may be specified in URL format,
+                                <br>e.g. https://github.com/kartoza/osgs
+                                <br><br>
+                                SSH connection format will attempt to use the
+                                <br>system default keys, but is not currently supported.
+                                <br>
+                                git@github.com:kartoza/osgs.git
+                                ') }}
 
             <div class="field">
                 <div class="field-label has-text-left is-flex is-align-items-center p-2">
