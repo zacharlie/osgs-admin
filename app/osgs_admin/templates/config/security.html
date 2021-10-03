@@ -1,146 +1,69 @@
 {% extends "_config.html" %}
 
+{% from 'components/_inputs.html' import form_input_field %}
+{% from 'components/_inputs.html' import form_info_field %}
+
 {% block content %}
 
 <div class="column is-8 content-block">
+    {% set config_section = request.args.get('section') %}
+    {% if config_section %}
+    {% set config_section_lower = config_section.lower() %}
+    {% else %}
+    {% set config_section_lower = None %}
+    {% endif %}
+
+    {% if config_section_lower == "ssl" %}
+    <h3 class="title">SSL</h3>
+    {% elif config_section_lower == "ssh" %}
+    <h3 class="title">SSH</h3>
+    {% elif config_section_lower == "oauth" %}
+    <h3 class="title">OAuth</h3>
+    {% else %}
     <h3 class="title">Security Configuration</h3>
+    {% endif %}
+
     <div class="box">
-        <p>{{request_active}}</p>
-        <p>{{g.request_active}}</p>
-        <a href="/ops/clone">Go To Clone</a>
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(category_filter!=["error"]) %}
         {% if messages %}
         <div class="notification is-info">
             {{ messages[0] }}.
         </div>
         {% endif %}
         {% endwith %}
-        <form method="POST" action="/config">
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+        {% if messages %}
+        <div class="notification is-danger">
+            {{ messages[0] }}.
+        </div>
+        {% endif %}
+        {% endwith %}
 
-            <div class="field">
-                <div class="field-label has-text-left">
-                    <label class="label" title="Site and System Name">System Name</label>
-                </div>
-                <div class="field-body">
-                    <div class="field">
-                        <p class="control">
-                            <input class="input" type="text" name="name"
-                                value="{{ osgs.name }}">
-                        </p>
-                    </div>
-                </div>
-            </div>
 
-            <div class="field">
-                <div class="field-label has-text-left">
-                    <label class="label" title="Site FQDN">Domain Name</label>
-                </div>
-                <div class="field-body">
-                    <div class="field">
-                        <p class="control">
-                            <input class="input" type="text" name="name"
-                                value="{{ osgs.fqdn }}">
-                        </p>
-                    </div>
-                </div>
-            </div>
+    {% if config_section_lower == "ssl" %}
 
-            <div class="field">
-                <div class="field-label has-text-left">
-                    <label class="label" title="Base Directory for Repository">OSGS Root</label>
-                </div>
-                <div class="field-body">
-                    <div class="field">
-                        <p class="control has-icons-left">
-                            <input class="input" type="text" name="root"
-                                value="{{ osgs.root }}" readonly>
-                            <span class="icon is-small is-left">
-                                <i class="material-icons" title="Help">help</i>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
+    SSL Content
+    <br>
+    Configure selfsigned/ user supplied/ lets encrypt. Generate or refresh certificates.
 
-            <div class="field">
-                <div class="field-label has-text-left is-flex is-align-items-center p-2">
-                    <label class="label is-flex is-align-content-center"
-                        title="Remote Git Repository">
-                        Target Repository
-                        <a href="#" class="icon has-text-grey-lighter ml-2
-                        is-clickable is-flex is-align-content-center">
-                            <i class="material-icons" title="Help">info</i>
-                        </a>
-                    </label>
-                </div>
-                <div class="field-body">
-                    <div class="field has-addons">
-                        <p class="control is-expanded">
-                            <input class="input" type="text" name="osgs_repo"
-                                value="{{ osgs_config["osgs_repo"] }}">
-                        </p>
-                        <div class="control">
-                            <a class="button is-danger">
-                                <span class="icon">
-                                    <i class="material-icons" title="Cancel Edits">cancel</i>
-                                </span>
-                            </a>
-                        </div>
-                        <div class="control">
-                            <a class="button is-success">
-                                <span class="icon mr-1">
-                                    <i class="material-icons" title="Submit Changes">check</i>
-                                </span>
-                                Submit
-                            </a>
-                        </div>
-                        <div class="control">
-                            <a class="button is-info">
-                                <span class="icon mr-1">
-                                    <i class="material-icons" title="Edit Field">edit</i>
-                                </span>
-                                Edit
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    {% elif config_section_lower == "ssh" %}
 
-            <div class="field">
-                <div class="field-label is-large has-text-centered">
-                    <label class="label">Services</label>
-                </div>
-                <div class="field-body">
-                    <div class="field">
-                        <p class="control">
-            <div class="columns">
-                <div class="column">
-                    <li class="checkbox">
-                        <input type="checkbox">
-                        checkbox
-                    </li>
-                </div>
-                <div class="column">
-                    <li class="checkbox">
-                        <input type="checkbox">
-                        checkbox
-                    </li>
-                </div>
-                <div class="column">
-                    <li class="checkbox">
-                        <input type="checkbox">
-                        checkbox
-                    </li>
-                </div>
-                <div class="column">
-                    <li class="checkbox">
-                        <input type="checkbox">
-                        checkbox
-                    </li>
-                </div>
-            </div>
+    SSH Content
+    <br>
+    Manage keys, known hosts, trusted clients etc
 
-        </p>
+    {% elif config_section_lower == "oauth" %}
+
+    Configure different services to use oauth provider
+
+    {% else %}
+
+    Get some security info, tips, and stats (users/ activity/ logs etc).
+    Set general options liek IP whitelists etc.
+
+    {% endif %}
+
+
     </div>
 </div>
 

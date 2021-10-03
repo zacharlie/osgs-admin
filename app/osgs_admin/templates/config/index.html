@@ -1,6 +1,7 @@
 {% extends "_config.html" %}
 
 {% from 'components/_inputs.html' import form_input_field %}
+{% from 'components/_inputs.html' import form_info_field %}
 
 {% block content %}
 
@@ -11,6 +12,7 @@
     {% else %}
     {% set config_section_lower = None %}
     {% endif %}
+
     {% if config_section_lower == "config" %}
     <h3 class="title">System Configuration</h3>
     {% elif config_section_lower == "env" %}
@@ -20,158 +22,97 @@
     {% else %}
     <h3 class="title">System Information</h3>
     {% endif %}
+
     <div class="box">
-        <p>{{request_active}}</p>
-        <p>{{g.request_active}}</p>
-        <a href="/ops/clone">Go To Clone</a>
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(category_filter!=["error"]) %}
         {% if messages %}
         <div class="notification is-info">
             {{ messages[0] }}.
         </div>
         {% endif %}
         {% endwith %}
-        <form method="POST" action="/config">
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+        {% if messages %}
+        <div class="notification is-danger">
+            {{ messages[0] }}.
+        </div>
+        {% endif %}
+        {% endwith %}
 
-            <div class="field">
-                <div class="field-label has-text-left">
-                    <label class="label" title="Site and System Name">System Name</label>
-                </div>
-                <div class="field-body">
-                    <div class="field">
-                        <p class="control">
-                            <input class="input" type="text" name="name"
-                                value="{{ osgs.name }}">
-                        </p>
-                    </div>
-                </div>
-            </div>
+    remember to add option for user specified docker registry
 
-            <div class="field">
-                <div class="field-label has-text-left">
-                    <label class="label" title="Site FQDN">Domain Name</label>
-                </div>
-                <div class="field-body">
-                    <div class="field">
-                        <p class="control">
-                            <input class="input" type="text" name="name"
-                                value="{{ osgs.fqdn }}">
-                        </p>
-                    </div>
-                </div>
-            </div>
+    {% if config_section_lower == "config" %}
 
-            <div class="field">
-                <div class="field-label has-text-left">
-                    <label class="label" title="Base Directory for Repository">OSGS Root</label>
-                </div>
-                <div class="field-body">
-                    <div class="field">
-                        <p class="control has-icons-left">
-                            <input class="input" type="text" name="root"
-                                value="{{ osgs.root }}" readonly>
-                            <span class="icon is-small is-left">
-                                <i class="material-icons" title="Help">help</i>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
 
-            {{ form_input_field(target='osgs_repo', fid='osgs_repo', label='Target Repository',
-                                value=osgs_config["osgs_repo"], content='
-                                This field specifies the remote target address
-                                <br>for the OSGS parent git repository which
-                                <br>is used to initialize the stack.
-                                <br><br>
-                                The address may be specified in URL format,
-                                <br>e.g. https://github.com/kartoza/osgs
-                                <br><br>
-                                SSH connection format will attempt to use the
-                                <br>system default keys, but is not currently supported.
-                                <br>
-                                git@github.com:kartoza/osgs.git
-                                ') }}
+    {{ form_input_field(target='name', route='/config/osgs/', label='Application Name',
+    value=osgs.name, content='
+    The application name, which will appear all over the show,
+    <br>such as web pages, map layouts and more.
+    ') }}
 
-            <div class="field">
-                <div class="field-label has-text-left is-flex is-align-items-center p-2">
-                    <label class="label is-flex is-align-content-center"
-                        title="Remote Git Repository">
-                        Target Repository
-                        <a href="#" class="icon has-text-grey-lighter ml-2
-                        is-clickable is-flex is-align-content-center">
-                            <i class="material-icons" title="Help">info</i>
-                        </a>
-                    </label>
-                </div>
-                <div class="field-body">
-                    <div class="field has-addons">
-                        <p class="control is-expanded">
-                            <input class="input" type="text" name="osgs_repo"
-                                value="{{ osgs_config["osgs_repo"] }}">
-                        </p>
-                        <div class="control">
-                            <a class="button is-danger">
-                                <span class="icon">
-                                    <i class="material-icons" title="Cancel Edits">cancel</i>
-                                </span>
-                            </a>
-                        </div>
-                        <div class="control">
-                            <a class="button is-success">
-                                <span class="icon mr-1">
-                                    <i class="material-icons" title="Submit Changes">check</i>
-                                </span>
-                                Submit
-                            </a>
-                        </div>
-                        <div class="control">
-                            <a class="button is-info">
-                                <span class="icon mr-1">
-                                    <i class="material-icons" title="Edit Field">edit</i>
-                                </span>
-                                Edit
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="field">
-                <div class="field-label is-large has-text-centered">
-                    <label class="label">Services</label>
-                </div>
-                <div class="field-body">
-                    <div class="field">
-                        <p class="control">
-            <div class="columns">
-                <div class="column">
-                    <li class="checkbox">
-                        <input type="checkbox">
-                        checkbox
-                    </li>
-                </div>
-                <div class="column">
-                    <li class="checkbox">
-                        <input type="checkbox">
-                        checkbox
-                    </li>
-                </div>
-                <div class="column">
-                    <li class="checkbox">
-                        <input type="checkbox">
-                        checkbox
-                    </li>
-                </div>
-                <div class="column">
-                    <li class="checkbox">
-                        <input type="checkbox">
-                        checkbox
-                    </li>
-                </div>
-            </div>
+    {{ form_input_field(target='fqdn', route='/config/osgs/', label='Domain Name',
+    value=osgs.fqdn, content='
+    The fully qualified domain name,
+    <br>which is very important for ssl.
+    ') }}
 
-        </p>
+    {{ form_input_field(target='root', route='/config/osgs/', label='OSGS Root',
+    value=osgs.root.replace("\\","/"), content='
+    The root application base directory path,
+    <br>which is where the git repo will clone to.
+    ') }}
+
+    {{ form_input_field(target='repo', route='/config/osgs/', label='Target Repository',
+    value=osgs_config["osgs_repo"], content='
+    This field specifies the remote target address
+    <br>for the OSGS parent git repository which
+    <br>is used to initialize the stack.
+    <br><br>
+    The address may be specified in URL format,
+    <br>e.g. https://github.com/kartoza/osgs
+    <br><br>
+    SSH connection format will attempt to use the
+    <br>system default keys, but is not currently supported.
+    <br>
+    git@github.com:kartoza/osgs.git
+    ') }}
+
+
+    {% elif config_section_lower == "env" %}
+
+    Environment Variable content
+    <br>
+    Setup CRUD for osgs/.env
+
+    {% elif config_section_lower == "compose" %}
+
+    Compose Content
+    <br>
+    Setup CRUD for osgs/docker-compose.yaml
+
+    {% else %}
+
+        {% set osgs_setup = True %}
+        {% set osgs_errors = False %}
+        {% if not osgs_setup %}
+
+        Initial setup has not been run
+
+        {% elif osgs_errors %}
+
+        There seem to be inconsistencies in the application config
+
+        {% else %}
+
+        {{ form_info_field(value="0.01", label='OSGS Admin Version') }}
+        {{ form_info_field(value=osgs.name, label='System Name', title='Site and System Name') }}
+        {{ form_info_field(value=osgs.fqdn, label='Domain Name', title='Site FQDN') }}
+
+        {% endif %}
+    {% endif %}
+
+
     </div>
 </div>
 

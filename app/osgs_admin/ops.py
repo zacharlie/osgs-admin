@@ -247,6 +247,7 @@ def rest_task_status(task_id):
 # # Example pages end #
 ##################################################
 
+"""
 
 @ops.route("/ops/clone")
 @login_required
@@ -273,6 +274,7 @@ def form_clone_post():
 def set_operation_req():
     return dict(request_active=False)
 
+"""
 
 """
 
