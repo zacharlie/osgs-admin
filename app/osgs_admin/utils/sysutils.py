@@ -1,5 +1,8 @@
 import psutil
+import os
+import subprocess
 import statistics
+from time import time
 
 # https://stackoverflow.com/questions/44434838/how-to-run-psutil-inside-a-docker-container
 
@@ -14,7 +17,9 @@ def get_sys_stats():
         cpu_freq_min_mhz,
         cpu_freq_max_mhz,
     ) = get_cpu_stats()
+    (disks, disk_io) = get_disks_stats()
     stats = {
+        "time": time(),
         "cpu": {
             "count": cpu_count,
             "percent": {
@@ -48,7 +53,20 @@ def get_sys_stats():
                 "free": freeRAMp,
             },
         },
+        "diskio": {
+            "read_count": disk_io.read_count,
+            "write_count": disk_io.write_count,
+            "read_bytes": disk_io.read_bytes,
+            "write_bytes": disk_io.write_bytes,
+            "read_time": disk_io.read_time,
+            "write_time": disk_io.write_time,
+        },
+        "disks": {},
     }
+
+    for disk in disks:
+        stats["disks"][disk] = {disk: disks[disk]}
+
     return stats
 
 
@@ -81,7 +99,6 @@ def get_cpu_stats():
 
 
 def get_ram_stats():
-    # RAM
     # various stats as object
     RAMstats = psutil.virtual_memory()
     # converted to a dictionary
@@ -97,6 +114,52 @@ def get_ram_stats():
         psutil.virtual_memory().available * 100 / psutil.virtual_memory().total, 1
     )
     return (totalRAMgb, freeRAMgb, usedRAMgb, usedRAMp, freeRAMp)
+
+
+def get_disks_stats():
+    # on windows we need to run diskperf before diskio counters
+    if os.name == "nt":
+        subprocess.run(
+            [
+                "cmd",
+                "/k",
+                "diskperf -y",
+            ],
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+        ).stdout
+    disk_io = psutil.disk_io_counters()
+    # disks_io = psutil.disk_io_counters(perdisk=True)
+
+    disks = {}
+    for i, disk in enumerate(psutil.disk_partitions(all=False), start=1):
+        # for io in disks_io:
+        #     if io.id == disks[disk].mount:
+        #         disks[disk]["io"] = io
+        usage = psutil.disk_usage(disk.mountpoint)
+
+        disks[i] = {
+            "device": disk.device,
+            "mount": disk.mountpoint,
+            "total": bytes2human(usage.total),
+            "used": bytes2human(usage.used),
+            "free": bytes2human(usage.free),
+            "percent": bytes2human(usage.percent),
+        }
+
+    # partitions = []
+    # for i, partition in enumerate(psutil.disk_partitions(all=True), start=1):
+    #     partitions.append(
+    #         {"id": i, "device": partition.device, "mount": partition.mountpoint}
+    #     )
+
+    return (disks, disk_io)
+
+
+def get_net_stats():
+    #
+    return ()
 
 
 def bytes2human(n):
