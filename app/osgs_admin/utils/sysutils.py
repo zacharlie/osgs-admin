@@ -7,6 +7,12 @@ from time import time
 # https://stackoverflow.com/questions/44434838/how-to-run-psutil-inside-a-docker-container
 
 
+def format_float(value, rounding=2):
+    """default formatting operation for establishing a consistent
+    representation of floating point and numeric values returned by API."""
+    return float("{:.{}f}".format(round(float(value), rounding), rounding))
+
+
 def get_sys_stats():
     """Get a dictionary of some useful system resource statistics"""
     (totalRAMgb, freeRAMgb, usedRAMgb, usedRAMp, freeRAMp) = get_ram_stats()
@@ -23,22 +29,20 @@ def get_sys_stats():
         "cpu": {
             "count": cpu_count,
             "percent": {
-                "mean": float("{:.2f}".format(round(statistics.mean(cpu_percent), 2))),
+                "mean": format_float(statistics.mean(cpu_percent)),
                 "interval": 0.05,
                 "values": cpu_percent,
             },
             "frequency": {
                 "ghz": {
-                    "current": float(
-                        "{:.2f}".format(round(cpu_freq_current_mhz / 1000, 2))
-                    ),
-                    "min": float("{:.2f}".format(round(cpu_freq_min_mhz / 1000, 2))),
-                    "max": float("{:.2f}".format(round(cpu_freq_max_mhz / 1000, 2))),
+                    "current": format_float(cpu_freq_current_mhz / 1000),
+                    "min": format_float(cpu_freq_min_mhz / 1000),
+                    "max": format_float(cpu_freq_max_mhz / 1000),
                 },
                 "mhz": {
-                    "current": float("{:.2f}".format(round(cpu_freq_current_mhz, 2))),
-                    "min": float("{:.2f}".format(round(cpu_freq_min_mhz, 2))),
-                    "max": float("{:.2f}".format(round(cpu_freq_max_mhz, 2))),
+                    "current": format_float(cpu_freq_current_mhz),
+                    "min": format_float(cpu_freq_min_mhz),
+                    "max": format_float(cpu_freq_max_mhz),
                 },
             },
         },
@@ -54,12 +58,12 @@ def get_sys_stats():
             },
         },
         "diskio": {
-            "read_count": disk_io.read_count,
-            "write_count": disk_io.write_count,
-            "read_bytes": disk_io.read_bytes,
-            "write_bytes": disk_io.write_bytes,
-            "read_time": disk_io.read_time,
-            "write_time": disk_io.write_time,
+            "read_count": format_float(disk_io.read_count),
+            "write_count": format_float(disk_io.write_count),
+            "read_bytes": format_float(disk_io.read_bytes),
+            "write_bytes": format_float(disk_io.write_bytes),
+            "read_time": format_float(disk_io.read_time),
+            "write_time": format_float(disk_io.write_time),
         },
         "disks": {},
     }
@@ -142,10 +146,10 @@ def get_disks_stats():
         disks[i] = {
             "device": disk.device,
             "mount": disk.mountpoint,
-            "total": bytes2human(usage.total),
-            "used": bytes2human(usage.used),
-            "free": bytes2human(usage.free),
-            "percent": bytes2human(usage.percent),
+            "total": round(usage.total / 1024 ** 3),
+            "used": round(usage.used / 1024 ** 3),
+            "free": round(usage.free / 1024 ** 3),
+            "percent": round(usage.percent / 1024 ** 3),
         }
 
     # partitions = []
