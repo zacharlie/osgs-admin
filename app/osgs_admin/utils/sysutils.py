@@ -68,8 +68,13 @@ def get_sys_stats():
         "disks": {},
     }
 
+    checked_devices = []
+
     for disk in disks:
-        stats["disks"][disk] = {disk: disks[disk]}
+        if not disks[disk]["device"] in checked_devices:
+            stats["disks"][disk] = disks[disk]
+            del stats["disks"][disk]["mount"]
+            checked_devices.append(disks[disk]["device"])
 
     return stats
 
