@@ -1,3 +1,4 @@
+from flask import current_app
 import psutil
 import os
 import subprocess
@@ -71,7 +72,13 @@ def get_sys_stats():
     }
 
     for cpu_core in cpu_distinct_stats:
-        stats["cores"][cpu_core] = cpu_distinct_stats[cpu_core]
+        core_stats = cpu_distinct_stats[cpu_core]
+        stats["cpu"]["cores"][cpu_core] = {}
+        stats["cpu"]["cores"][cpu_core]["percent"] = {}
+        stats_key = stats["cpu"]["cores"][cpu_core]["percent"]
+        stats_key["mean"] = format_float(statistics.mean(core_stats))
+        stats_key["interval"] = 0.1
+        stats_key["values"] = core_stats
 
     checked_devices = []
 
@@ -113,16 +120,10 @@ def get_cpu_stats():
         psutil.cpu_percent(interval=0.1, percpu=True),
     ]
     cpu_distinct_stats = {}
-    for usage_list in cpu_percents:
-        if isinstance(usage_list, float):
-            usage_list = list(usage_list)
-        if len(usage_list) > 1:
-            usage_lists = [list(x) for x in zip(*usage_list)]
-        else:
-            usage_lists = usage_list
-        for idx, stats_list in enumerate(usage_lists):
-            core_id = idx + 1
-            cpu_distinct_stats[core_id] = stats_list
+    usage_lists = [list(x) for x in zip(*cpu_percents)]
+    for idx, stats_list in enumerate(usage_lists):
+        core_id = idx + 1
+        cpu_distinct_stats[core_id] = stats_list
     cpu_freq_current_mhz = psutil.cpu_freq().current
     cpu_freq_min_mhz = psutil.cpu_freq().min
     cpu_freq_max_mhz = psutil.cpu_freq().max
