@@ -19,6 +19,7 @@ def get_sys_stats():
     (
         cpu_count,
         cpu_percent,
+        cpu_distinct_stats,
         cpu_freq_current_mhz,
         cpu_freq_min_mhz,
         cpu_freq_max_mhz,
@@ -30,7 +31,7 @@ def get_sys_stats():
             "count": cpu_count,
             "percent": {
                 "mean": format_float(statistics.mean(cpu_percent)),
-                "interval": 0.05,
+                "interval": 0.1,
                 "values": cpu_percent,
             },
             "frequency": {
@@ -45,6 +46,7 @@ def get_sys_stats():
                     "max": format_float(cpu_freq_max_mhz),
                 },
             },
+            "cores": {},
         },
         "ram": {
             "gb": {
@@ -68,6 +70,9 @@ def get_sys_stats():
         "disks": {},
     }
 
+    for cpu_core in cpu_distinct_stats:
+        stats["cores"][cpu_core] = cpu_distinct_stats[cpu_core]
+
     checked_devices = []
 
     for disk in disks:
@@ -84,23 +89,47 @@ def get_cpu_stats():
     # sampling interval can be useful at 0.5 seconds to prevent spikes
     # Getting numerous shorter samples is useful when post-processing
     cpu_percent = [
-        psutil.cpu_percent(interval=0.05),
-        psutil.cpu_percent(interval=0.05),
-        psutil.cpu_percent(interval=0.05),
-        psutil.cpu_percent(interval=0.05),
-        psutil.cpu_percent(interval=0.05),
-        psutil.cpu_percent(interval=0.05),
-        psutil.cpu_percent(interval=0.05),
-        psutil.cpu_percent(interval=0.05),
-        psutil.cpu_percent(interval=0.05),
-        psutil.cpu_percent(interval=0.05),
+        psutil.cpu_percent(interval=0.1),
+        psutil.cpu_percent(interval=0.1),
+        psutil.cpu_percent(interval=0.1),
+        psutil.cpu_percent(interval=0.1),
+        psutil.cpu_percent(interval=0.1),
+        psutil.cpu_percent(interval=0.1),
+        psutil.cpu_percent(interval=0.1),
+        psutil.cpu_percent(interval=0.1),
+        psutil.cpu_percent(interval=0.1),
+        psutil.cpu_percent(interval=0.1),
     ]
+    cpu_percents = [
+        psutil.cpu_percent(interval=0.1, percpu=True),
+        psutil.cpu_percent(interval=0.1, percpu=True),
+        psutil.cpu_percent(interval=0.1, percpu=True),
+        psutil.cpu_percent(interval=0.1, percpu=True),
+        psutil.cpu_percent(interval=0.1, percpu=True),
+        psutil.cpu_percent(interval=0.1, percpu=True),
+        psutil.cpu_percent(interval=0.1, percpu=True),
+        psutil.cpu_percent(interval=0.1, percpu=True),
+        psutil.cpu_percent(interval=0.1, percpu=True),
+        psutil.cpu_percent(interval=0.1, percpu=True),
+    ]
+    cpu_distinct_stats = {}
+    for usage_list in cpu_percents:
+        if isinstance(usage_list, float):
+            usage_list = list(usage_list)
+        if len(usage_list) > 1:
+            usage_lists = [list(x) for x in zip(*usage_list)]
+        else:
+            usage_lists = usage_list
+        for idx, stats_list in enumerate(usage_lists):
+            core_id = idx + 1
+            cpu_distinct_stats[core_id] = stats_list
     cpu_freq_current_mhz = psutil.cpu_freq().current
     cpu_freq_min_mhz = psutil.cpu_freq().min
     cpu_freq_max_mhz = psutil.cpu_freq().max
     return (
         cpu_count,
         cpu_percent,
+        cpu_distinct_stats,
         cpu_freq_current_mhz,
         cpu_freq_min_mhz,
         cpu_freq_max_mhz,
