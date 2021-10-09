@@ -3,7 +3,7 @@ import psutil
 import os
 import subprocess
 import statistics
-from time import time
+from time import time, sleep
 
 # https://stackoverflow.com/questions/44434838/how-to-run-psutil-inside-a-docker-container
 
@@ -26,6 +26,7 @@ def get_sys_stats():
         cpu_freq_max_mhz,
     ) = get_cpu_stats()
     (disks, disk_io) = get_disks_stats()
+    (nio_rate_total, nio_rate_nic, nio_total, nio_nic) = get_net_stats()
     stats = {
         "time": time(),
         "cpu": {
@@ -69,6 +70,22 @@ def get_sys_stats():
             "write_time": format_float(disk_io.write_time),
         },
         "disks": {},
+        "network": {
+            "bytes_sent": nio_total.bytes_sent,
+            "bytes_recv": nio_total.bytes_recv,
+            "packets_sent": nio_total.packets_sent,
+            "packets_recv": nio_total.packets_recv,
+            "errin": nio_total.errin,
+            "errout": nio_total.errout,
+            "dropin": nio_total.dropin,
+            "dropout": nio_total.dropout,
+            "adapters": {},
+            "rates": {
+                "bytes_ps_sent": nio_rate_total.bytes_sent,
+                "bytes_ps_recv": nio_rate_total.bytes_recv,
+                "adapters": {},
+            },
+        },
     }
 
     for cpu_core in cpu_distinct_stats:
@@ -87,6 +104,30 @@ def get_sys_stats():
             stats["disks"][disk] = disks[disk]
             del stats["disks"][disk]["mount"]
             checked_devices.append(disks[disk]["device"])
+
+    for nic in nio_nic:
+        nic_io = nio_nic[nic]
+        nic_io_stats = {
+            "bytes_sent": nic_io.bytes_sent,
+            "bytes_recv": nic_io.bytes_recv,
+            "packets_sent": nic_io.packets_sent,
+            "packets_recv": nic_io.packets_recv,
+            "errin": nic_io.errin,
+            "errout": nic_io.errout,
+            "dropin": nic_io.dropin,
+            "dropout": nic_io.dropout,
+        }
+        stats["network"]["adapters"][nic] = nic_io_stats
+
+    for nic in nio_rate_nic:
+        nic_rate_io = nio_rate_nic[nic]
+        nic_rate_stats = {
+            "bytes_ps_sent": nic_rate_io.bytes_sent,
+            "bytes_ps_recv": nic_rate_io.bytes_recv,
+        }
+        stats["network"]["rates"]["adapters"][nic] = nic_rate_stats
+
+    current_app.logger.warn(f"stats collected: {stats}")
 
     return stats
 
@@ -197,8 +238,38 @@ def get_disks_stats():
 
 
 def get_net_stats():
-    #
-    return ()
+    nio_rate_total, nio_rate_nic = poll_net_io(1)
+    nio_total = psutil.net_io_counters()
+    nio_nic = psutil.net_io_counters(pernic=True)
+    return (nio_rate_total, nio_rate_nic, nio_total, nio_nic)
+
+
+def poll_net_io(interval):
+    """Diff nic stats to get usage rate (e.g kb/s)"""
+    from collections import namedtuple
+
+    nicIO = namedtuple(
+        "nicIO",
+        "bytes_sent bytes_recv packets_sent packets_recv errin errout dropin dropout",
+    )
+    pre_nio_total = psutil.net_io_counters()
+    pre_nio_nic = psutil.net_io_counters(pernic=True)
+    sleep(interval)
+    post_nio_total = psutil.net_io_counters()
+    nio_rate_total = tuple(
+        map(lambda i, j: i - j, tuple(post_nio_total), tuple(pre_nio_total))
+    )
+    current_app.logger.warn(f"{nio_rate_total}")
+    nio_rate_total = nicIO(*nio_rate_total)
+    post_nio_nic = psutil.net_io_counters(pernic=True)
+    nio_rate_nic = {}
+    # current_app.logger.warn(f"pre_nio_nic: {pre_nio_nic}")
+    # current_app.logger.warn(f"post_nio_nic: {post_nio_nic}")
+    for key, val in pre_nio_nic.items():
+        v = post_nio_nic[key]
+        nic_rate = tuple(map(lambda i, j: i - j, tuple(v), tuple(val)))
+        nio_rate_nic[key] = nicIO(*nic_rate)
+    return nio_rate_total, nio_rate_nic
 
 
 def bytes2human(n):
