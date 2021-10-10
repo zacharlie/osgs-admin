@@ -2,6 +2,8 @@
 
 Administration and management console for the [Open Source GIS Stack](https://github.com/kartoza/osgs).
 
+![Preview](https://user-images.githubusercontent.com/64078329/136703281-a87b5ec3-d60f-4b1f-ae76-9ffd9dbcc4b4.png)
+
 ## Deployment
 
 This application is designed to run system commands against a subdirectory which holds the Open Source GIS Stack. As such, there are serious security implications regarding the exposure of this interface. The primary aim of this application is to provide a user interface for management operations which can be conveniently run on a server, and it is recommended that this infrastructure is isolated at the network level.
